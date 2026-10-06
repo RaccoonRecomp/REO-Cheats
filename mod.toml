@@ -1,0 +1,986 @@
+[manifest]
+id = "REO_Cheats"
+version = "1.2.0"
+display_name = "Resident Evil Outbreak — Cheats"
+description = """
+Every cheat of the owner's regular (original release) Resident Evil Outbreak (NTSC-U) list, each its own option: 102 cheats from Codejunkies (Action Replay MAX), Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83 (CodeBreaker v7+), MadCatz and bungholio (GameShark v3-4 / Xploder v4), on SLUS-20765 disc version 2.00, the disc this recompilation runs (its game code has the Greatest Hits memory layout).
+40 work as written, 34 are adapted to your disc (moved only to a proven equivalent), 19 could not be decoded and do what their name says instead (costume codes: a substitute with valid costume bits, not a proven equivalent), 9 cannot work on your disc and do nothing (the reason is in their description).
+Every option shows your device code(s), the plain code and the evidence. A cheat applies only while the master code of its device is On.
+Separate from "Resident Evil Outbreak — Greatest Hits Cheats": enable only one of the two.
+"""
+short_description = "All of the regular release's cheats for Resident Evil Outbreak, each its own option, on the NTSC-U v2.00 disc"
+authors = [ "RaccoonRecomp" ]
+# The game id of the disc this recompilation runs (SLUS-20765 v2.00); the same id REO_GreatestHits_Cheats and
+# REO_ModernCam use for it.
+game_id = "reo"
+minimum_recomp_version = "1.0.0"
+dependencies = []
+native_libraries = []
+
+[inputs]
+elf_path = "build/mod.elf"
+mod_filename = "REO_Cheats"
+# Function reference symbols for SLUS-20765 v2.00 (this mod references no game functions).
+func_reference_syms_file = "syms/reo.syms.toml"
+data_reference_syms_files = []
+additional_files = [ "thumb.png" ]
+
+[[manifest.config_options]]
+id = "master_armax_codejunkies"
+name = "Master Code (Action Replay MAX): (M) Must Be On by Codejunkies"
+description = "Enables the Codejunkies cheats (Health Codes, Speed Codes). No hook is written: the recompiled game has no cheat device, and writing a hook into the game's code would take it out of native execution. This switch enables the cheats of its device instead.\n\nYour code:\n(M) Must Be On by Codejunkies\nARMax\nEKY2-XWW7-A72B7\nHA6U-5AXQ-6JUPN\nREM0-94FT-ENA79\nCAUD-4J5H-604VC\nEZDH-WVDK-UDCG8\nF3XY-6XUY-3B6KN\n\nMASTER CODE. Decrypted here (the DES layer: every line passes its parity check and the code CRC matches; game id 0x059B, code id 0x17B68, master flag set). Its values decode with the fixed byte transform that turns every Codejunkies code of your list into its pnach line (42 of 42 lines): j 0x00239368 (a jump into the code table the Speed/Health codes fill), j 0x001BA16C (back into the game), lui at,0x0031 and two data words. The hook address itself sits in the address layer, which was not decoded."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "On"
+
+[[manifest.config_options]]
+id = "cj_armax_below_314_fix"
+name = "AR Max Below 3.14 Fix by Codejunkies (does nothing on your disc)"
+description = "Nothing: this is a firmware fix for Action Replay MAX devices older than 3.14.\n\nYour code:\nAR Max Below 3.14 Fix by Codejunkies\nARMax\nEAHE-TV7V-RT59B\nYRV9-YZ0N-VNQJ8\nHG40-P0HB-CKJY4\n2G9C-1TJQ-EJJVP\nWZ1G-Y3EW-7FAKR\n4V4B-7WZ8-16UP0\n\nPlain code (your pnach):\n[AR Max Below 3.14 Fix] 2011CD00 3C03200F / 2011CD08 8C65FFF8 / 2011CD0C 24040079 / 2011CD10 24030074 / 2011CD14 0000000C\n\nNOT WORKING ON YOUR DISC. Decrypted: its five lines are exactly the pnach lines (2011CD00 3C03200F ... 2011CD14 0000000C). They rewrite the executable's own code at 0x0011CD00 (on your disc bnez v0 / move a1,s0 / jal 0x00116848 / b 0x0011CDA4) with a system call the old device firmware needed. There is no device here, and the recompiled executable never runs rewritten code, so it has nothing to do and the option does nothing.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "master_codebreaker_codemaster"
+name = "Master Code (CodeBreaker v7+): Enable Code (Must Be On) by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83"
+description = "Enables the Code Master (CodeBreaker) cheats. No hook is written: the recompiled game has no cheat device, and writing a hook into the game's code would take it out of native execution. This switch enables the cheats of its device instead.\n\nYour code:\nEnable Code (Must Be On) by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nB4336FA9 4DFEFB79\n81BFE04F 68815567\nF816577A 43980854\n535F17F1 63E46A24\n\nMASTER CODE. Not decoded: CodeBreaker v7 encryption needs 1,280 bytes of fixed seed tables that are only in the public tools' source files, which were not downloaded."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "On"
+
+[[manifest.config_options]]
+id = "master_gameshark_madcatz"
+name = "Master Code (GameShark v3-4 / Xploder v4): [M] Must Be On by MadCatz"
+description = "Enables the MadCatz and bungholio (GameShark) cheats; any of the three GameShark master codes does. No hook is written: the recompiled game has no cheat device, and writing a hook into the game's code would take it out of native execution. This switch enables the cheats of its device instead.\n\nYour code:\n[M] Must Be On by MadCatz\nGameShark v3-4 / Xploder v4\n94D0B9FE B46E0F4E\n\nPlain code (your pnach):\n[Must Be On] 9012D460 0C04939E\n\nMASTER CODE. Decoded with the GameShark v3 key-2 decoder: 94D0B9FE B46E0F4E = 9012D460 0C04939E, bit for bit the pnach's \"Must Be On\" by MadCatz. A type-9 hook on the jal 0x00124E78 at 0x0012D460, which your disc has."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "On"
+
+[[manifest.config_options]]
+id = "master_gameshark_madcatz_alternate"
+name = "Master Code (GameShark v3-4 / Xploder v4): Alternate [M] Must Be On by MadCatz"
+description = "Enables the MadCatz and bungholio (GameShark) cheats, like [M] Must Be On. No hook is written: the recompiled game has no cheat device, and writing a hook into the game's code would take it out of native execution. This switch enables the cheats of its device instead.\n\nYour code:\nAlternate [M] Must Be On by MadCatz\nGameShark v3-4 / Xploder v4\n94D03AFA BDEE5344\n\nPlain code (your pnach):\n[Alternate [M] Must Be On] 9013FC80 0C041EAC\n\nMASTER CODE. Decoded (GameShark v3 key 2): 94D03AFA BDEE5344 = 9013FC80 0C041EAC, the pnach's \"Alternate [M] Must Be On\". A hook on the jal 0x00107AB0 at 0x0013FC80, which your disc has."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "master_gameshark_madcatz_must_be_on"
+name = "Master Code (GameShark v3-4 / Xploder v4): Must Be On by MadCatz"
+description = "Enables the MadCatz and bungholio (GameShark) cheats, like [M] Must Be On. Your list has it twice, with and without its two extra lines: one master code. No hook is written: the recompiled game has no cheat device, and writing a hook into the game's code would take it out of native execution. This switch enables the cheats of its device instead.\n\nYour code:\nMust Be On by MadCatz\nGameShark v3-4 / Xploder v4\n76059A20 00000000\n 770001AB 66EC1955\n 980812E6 78D0614E\n\nAlso in your list as:\nMust Be On by MadCatz\nGameShark v3-4 / Xploder v4\n980812E6 78D0614E\n\nMASTER CODE. Not decoded: its lines use GameShark v3 keys 3 and 4, and only key 2 was reconstructed here. The pnach has one raw \"Must Be On\" by MadCatz, the hook 9012D460 0C04939E."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_have_all_collection_available"
+name = "Collection Codes: Have All Collection Available For Purchase"
+description = "Every collection item can be bought: the \"available\" bits of all 172 collection items (save data 0x00323BF4, six words) are set.\n\nYour code:\nHave All Collection Available For Purchase by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nD4212582 60B61D27\n0CF49BDF A4E29C32\n\nPlain code (your pnach):\n[Collection Codes\\Have All Collection Available For Purchase] 40323274 00060001 / FFFFFFFF 00000000\n\nADAPTED TO YOUR DISC. Regular address 0x00323274 + 0x980 (the save block of your disc starts 0x980 higher; your disc's demo.bin reads this bitset at 0x0057C4F0). Only the bits of items that exist (the ids in the game's five collection tables) are set, not all 192. Probe m_coll_avail_mask: every tab shows every item with its price (sheet_coll_avail.png).\n\nSave data: Yes: written to the save and kept when the game saves; the bits of real items only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_have_all_collection_purchased"
+name = "Collection Codes: Have All Collection Purchased"
+description = "Every collection item shows as owned (\"You already have this\"): the \"owned\" bits of all collection items (0x00323C54, six words).\n\nYour code:\nHave All Collection Purchased by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n43A2ABEE C2A8144A\n0CF49BDF A4E29C32\n\nPlain code (your pnach):\n[Collection Codes\\Have All Collection Purchased] 403232D4 00060001 / FFFFFFFF 00000000\n\nADAPTED TO YOUR DISC. Regular 0x003232D4 + 0x980. Only the bits of items that exist are set. Probe m_coll_owned_mask: every tab shows \"You already have this\" (sheet_coll_opened_owned.png, lower row). The game then applies owned costumes, NPCs and extra modes itself, as after a purchase.\n\nSave data: Yes: kept when the game saves; the bits of real items only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_infinite_reward_points"
+name = "Collection Codes: Infinite Reward Points"
+description = "The collection points are held at xx,x65,535 (the low 16 bits of the points word set to 0xFFFF).\n\nYour code:\nInfinite Reward Points by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n9BCC7E15 AA37079E\n\nPlain code (your pnach):\n[Collection Codes\\Infinite Reward Points] 1031F1E0 0000FFFF\n\nADAPTED TO YOUR DISC. Regular 0x0031F1E0 + 0x980 = 0x0031FB60, the points word. Probe m_coll_owned_mask: the collection shows 65535 Pts. Never written when the result would be above 99,999,999 (the display maximum).\n\nSave data: Yes: the points are saved.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_infinite_rewards_points_usage"
+name = "Collection Codes: Infinite Rewards Points Usage (does nothing on your disc)"
+description = "Nothing.\n\nYour code:\nInfinite Rewards Points Usage by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nBFBFD7BA 99C3BCBD\n67D44154 89EE5F88\nF2E78FF2 740ED6B0\n\nPlain code (your pnach):\n[Collection Codes\\Infinite Rewards Points Usage] E0020833 0057ADF4 / 2057AE08 00000000 / 1057AE16 00001000\n\nNOT WORKING ON YOUR DISC. Its guard (the halfword 0x0833 at 0x0057ADF4) occurs nowhere in your disc's demo.bin (searched), so the place it patches cannot be found. Its first write happens to land on the points subtraction (0x0057AE08 subu a0,a0,a1), but its second write would turn sw a0,0xc(s0) into a branch. Not applied.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_max_reward_points"
+name = "Collection Codes: Max Reward Points"
+description = "The collection points are set to 99,999,999.\n\nYour code:\nMax Reward Points by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n5D3F711E D7350D80\n\nPlain code (your pnach):\n[Collection Codes\\Max Reward Points] 2031F1E0 05F5E0FF\n\nADAPTED TO YOUR DISC. Regular 0x0031F1E0 + 0x980 = 0x0031FB60. The same word and value as probe m1 of the cheat analysis (RESULT 99999999 Pts). 99,999,999 is the display maximum.\n\nSave data: Yes: the points are saved.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "infinite_health"
+name = "Health Codes: Infinite Health"
+description = "Player 1's HP is kept at Player 1's max HP (what the installed code does: lh max HP / sh HP).\n\nYour code:\nInfinite Health by Codejunkies\nARMax\nENN7-JGFC-212RV\n6ZTV-FCUG-8RYBH\n2JF8-Q6YC-JX7ZX\n4XUF-M1XC-3C9NV\n\nPlain code (your pnach):\n[Health Codes\\Infinite Health] 20239380 3C01004A / 20239384 842260F6 / 2023938C A42260F4\n\nADAPTED TO YOUR DISC. The installed code (decoded, the same as the pnach lines) reads 0x004A60F6 and writes 0x004A60F4; the Player 1 block is 0x80 higher on your disc (HP 0x004A6174, max HP 0x004A6176). Probe reg_health (1.1.0): Kevin hit 12 times, back to 2300/2300 each time.\n\nSave data: No.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_infinite_health_max_health"
+name = "Health Codes: Infinite Health & Max Health (Never Bleed)"
+description = "Player 1's HP and max HP are both held at 9999.\n\nYour code:\nInfinite Health & Max Health (Never Bleed) by Codejunkies\nARMax\n69X5-ANCQ-T4UZ7\n6ZTV-FCUG-8RYBH\nZMQ7-4A1R-3F5BB\n4XUF-M1XC-3C9NV\nRUZ9-KA80-XQUU3\n\nPlain code (your pnach):\n[Health Codes\\Infinite Health & Max Health (Never Bleed)] 20239380 3C01004A / 20239384 2402270F / 2023938C A42260F4 / 20239390 A42260F6\n\nADAPTED TO YOUR DISC. Installed code: li v0,9999 / sh HP / sh max HP at 0x004A60F4/F6, +0x80 = 0x004A6174/76. Probe g_combo: 9999/9999 held through the zombie phase (Kevin was bitten; without the cheat his HP drops to 1055).\n\nSave data: No.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_item_values_table"
+name = "Item Values table (for the Player 1 Item Slot codes)"
+description = "Which of your \"Item Values\" tables (by nobody) the item slot options look their item up in: pick the scenario and difficulty you play. The slot value is the item's number in that table.\n\nYour tables are used as written. The item numbers are the game's item records of the scenario (probe g_giant_slots: in Outbreak on Normal, 0x42 gave a Shotgun (7) and 0x39 a Magnum Revolver (6), as your \"Outbreak - Normal\" table says). The scenario and difficulty are not read from memory: no address for them was proven, so you pick the table."
+type = "Enum"
+options = [ "Decisions, Decisions - Easy", "Decisions, Decisions - Hard", "Decisions, Decisions - Normal", "Decisions, Decisions - Very Hard", "Hellfire - Easy", "Hellfire - Hard", "Hellfire - Normal", "Hellfire - Very Hard", "Below Freezing Point - Easy", "Below Freezing Point - Hard", "Below Freezing Point - Normal", "Below Freezing Point - Very Hard", "Outbreak - Easy", "Outbreak - Hard", "Outbreak - Normal", "Outbreak - Very Hard", "The Hive - Easy", "The Hive - Hard", "The Hive - Normal", "The Hive - Very Hard" ]
+default = "Outbreak - Normal"
+
+[[manifest.config_options]]
+id = "bh_p1_item_slot_1"
+name = "Player 1 Item Slot Modifiers: Player 1 Item Slot 1"
+description = "Holds the item you pick in this slot (byte 0x004A68B4), like the code's ?? value: the mod writes the number the picked item has in the chosen Item Values table. An item that is not in that table leaves the slot alone. \"Past the table +N\" are the numbers after the table: your list's note says those are the characters' own items (in Outbreak on Normal, +0 is \"45 Auto for Kevin\").\n\nThe slot is held while the option is on: you cannot drop or use up that slot's item until you turn it off.\n\nYour code:\nPlayer 1 Item Slot 1 by bungholio\nGameShark v3-4 / Xploder v4\n004A68B4 000000??\n\nPlain code (your pnach):\n[Player 1 Item Slot Modifiers\\Player 1 Item Slot 1] 004A68B4 00000000\n\nWORKS AS WRITTEN on your disc. 0x004A68B4 is Player 1's block (0x004A5C30) + 0xC84, your disc's own item slots (game.bin reads and writes them, e.g. lbu a1,0xc84(v1)). Probe g_giant_slots: slot 1 = 0x42 and slot 2 = 0x39 showed a Shotgun (7) and a Magnum Revolver (6) in Kevin's inventory; the Special slot held 0x51, \"45 Auto for Kevin\" (sheet_giant_slots.png).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "Nothing", "45 Auto Rounds (12)", "45 Auto Rounds (14)", "45 Auto Rounds (2)", "45 Auto Rounds (4)", "45 Auto Rounds (5)", "45 Auto Rounds (7)", "Acid Rounds (2)", "Acid Rounds (4)", "Alcohol Bottle", "Ampule Shooter (0)", "Anti Virus (1)", "Anti Virus (L) (1)", "Antidote (1)", "Assault Rifle (30)", "Assault Rifle Magazine (10)", "Assault Rifle Magazine (20)", "Assault Rifle Magazine (30)", "Battery", "Blood Pack", "Blowtorch", "Blue Herb", "Blue Jewel", "Brass Spectacles", "Broken Shotgun", "Burst Handgun (12)", "Burst Handgun (20)", "Burst Rounds (10)", "Burst Rounds (2)", "Burst Rounds (3)", "Burst Rounds (4)", "Butcher Knife", "Card Key", "Card Key Level 1", "Card Key Level 2", "Charlie's ID Tag", "Concrete Piece", "Crutch", "Curved Iron Pipe", "Daylight", "Detonator Handle", "Detonator Main Unit", "First Aid Spray", "Folding Knife", "Forklift Key", "Frozen Wrench", "G. Launcher-Acid Rounds (2)", "G. Launcher-Acid Rounds (5)", "G. Launcher-Acid Rounds (7)", "G. Launcher-Burst Rounds (4)", "Gold Key", "Gray Chemical Bottle (2)", "Gray Chemical Bottle (3)", "Gray Chemical Bottle (5)", "Green Herb", "Handgun (0)", "Handgun (1)", "Handgun (10)", "Handgun (12)", "Handgun (15)", "Handgun (5)", "Handgun Magazine (15)", "Handgun Rounds", "Handgun Rounds (10)", "Handgun Rounds (12)", "Handgun Rounds (15)", "Handgun Rounds (16)", "Handgun Rounds (18)", "Handgun Rounds (20)", "Handgun Rounds (24)", "Handgun Rounds (30)", "Handgun Rounds (50)", "Handgun Rounds (60)", "Handgun SG (10)", "Handgun SG (13)", "Hemostat (1)", "Investigation Request", "Iron Pipe", "Key With A Red Tag", "Key With Blue Tag", "Lab Cardkey", "Len's ID Tag", "Light", "Lighter", "Magnum Handgun (1)", "Magnum Handgun (3)", "Magnum Handgun (5)", "Magnum Handgun (7)", "Magnum Revolver (6)", "Magnum Revolver Rounds (6)", "Male Nurse's Diary", "Nail Gun (20)", "Padlock Key", "Pesticide Spray", "Pesticide Spray (9)", "Raccoon Today", "Reagent Case", "Recovery Medicine (1)", "Recovery Medicine (L) (1)", "Recovery Medicine Base", "Red Herb", "Red Jewel", "Researcher's Diary", "Rocket Launcher (1)", "Scrub Brush", "Sealed Reagent Case", "Security Room Card Key", "Shotgun (1)", "Shotgun (4)", "Shotgun (7)", "Shotgun Rounds (10)", "Shotgun Rounds (12)", "Shotgun Rounds (14)", "Shotgun Rounds (21)", "Shotgun Rounds (24)", "Shotgun Rounds (3)", "Shotgun Rounds (5)", "Shotgun Rounds (7)", "Silver Key", "Spear", "Staff Room Key", "Stick", "Storage Room Key", "Sub Machinegun (20)", "Survival Knife", "T-Blood", "Turn Table Key", "UMB No.3", "V-Poison", "Valve Handle", "VP-017", "Wooden Pole", "Yellow Chemical Bottle (2)", "Yellow Chemical Bottle (3)", "Past the table +0 (a character's own item, see the note)", "Past the table +1 (a character's own item, see the note)", "Past the table +2 (a character's own item, see the note)", "Past the table +3 (a character's own item, see the note)", "Past the table +4 (a character's own item, see the note)", "Past the table +5 (a character's own item, see the note)", "Past the table +6 (a character's own item, see the note)", "Past the table +7 (a character's own item, see the note)", "Past the table +8 (a character's own item, see the note)", "Past the table +9 (a character's own item, see the note)", "Past the table +10 (a character's own item, see the note)", "Past the table +11 (a character's own item, see the note)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_item_slot_2"
+name = "Player 1 Item Slot Modifiers: Player 1 Item Slot 2"
+description = "Holds the item you pick in this slot (byte 0x004A68B5), like the code's ?? value: the mod writes the number the picked item has in the chosen Item Values table. An item that is not in that table leaves the slot alone. \"Past the table +N\" are the numbers after the table: your list's note says those are the characters' own items (in Outbreak on Normal, +0 is \"45 Auto for Kevin\").\n\nThe slot is held while the option is on: you cannot drop or use up that slot's item until you turn it off.\n\nYour code:\nPlayer 1 Item Slot 2 by bungholio\nGameShark v3-4 / Xploder v4\n004A68B5 000000??\n\nPlain code (your pnach):\n[Player 1 Item Slot Modifiers\\Player 1 Item Slot 2] 004A68B5 00000000\n\nWORKS AS WRITTEN on your disc. 0x004A68B5 is Player 1's block (0x004A5C30) + 0xC85, your disc's own item slots (game.bin reads and writes them, e.g. lbu a1,0xc84(v1)). Probe g_giant_slots: slot 1 = 0x42 and slot 2 = 0x39 showed a Shotgun (7) and a Magnum Revolver (6) in Kevin's inventory; the Special slot held 0x51, \"45 Auto for Kevin\" (sheet_giant_slots.png).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "Nothing", "45 Auto Rounds (12)", "45 Auto Rounds (14)", "45 Auto Rounds (2)", "45 Auto Rounds (4)", "45 Auto Rounds (5)", "45 Auto Rounds (7)", "Acid Rounds (2)", "Acid Rounds (4)", "Alcohol Bottle", "Ampule Shooter (0)", "Anti Virus (1)", "Anti Virus (L) (1)", "Antidote (1)", "Assault Rifle (30)", "Assault Rifle Magazine (10)", "Assault Rifle Magazine (20)", "Assault Rifle Magazine (30)", "Battery", "Blood Pack", "Blowtorch", "Blue Herb", "Blue Jewel", "Brass Spectacles", "Broken Shotgun", "Burst Handgun (12)", "Burst Handgun (20)", "Burst Rounds (10)", "Burst Rounds (2)", "Burst Rounds (3)", "Burst Rounds (4)", "Butcher Knife", "Card Key", "Card Key Level 1", "Card Key Level 2", "Charlie's ID Tag", "Concrete Piece", "Crutch", "Curved Iron Pipe", "Daylight", "Detonator Handle", "Detonator Main Unit", "First Aid Spray", "Folding Knife", "Forklift Key", "Frozen Wrench", "G. Launcher-Acid Rounds (2)", "G. Launcher-Acid Rounds (5)", "G. Launcher-Acid Rounds (7)", "G. Launcher-Burst Rounds (4)", "Gold Key", "Gray Chemical Bottle (2)", "Gray Chemical Bottle (3)", "Gray Chemical Bottle (5)", "Green Herb", "Handgun (0)", "Handgun (1)", "Handgun (10)", "Handgun (12)", "Handgun (15)", "Handgun (5)", "Handgun Magazine (15)", "Handgun Rounds", "Handgun Rounds (10)", "Handgun Rounds (12)", "Handgun Rounds (15)", "Handgun Rounds (16)", "Handgun Rounds (18)", "Handgun Rounds (20)", "Handgun Rounds (24)", "Handgun Rounds (30)", "Handgun Rounds (50)", "Handgun Rounds (60)", "Handgun SG (10)", "Handgun SG (13)", "Hemostat (1)", "Investigation Request", "Iron Pipe", "Key With A Red Tag", "Key With Blue Tag", "Lab Cardkey", "Len's ID Tag", "Light", "Lighter", "Magnum Handgun (1)", "Magnum Handgun (3)", "Magnum Handgun (5)", "Magnum Handgun (7)", "Magnum Revolver (6)", "Magnum Revolver Rounds (6)", "Male Nurse's Diary", "Nail Gun (20)", "Padlock Key", "Pesticide Spray", "Pesticide Spray (9)", "Raccoon Today", "Reagent Case", "Recovery Medicine (1)", "Recovery Medicine (L) (1)", "Recovery Medicine Base", "Red Herb", "Red Jewel", "Researcher's Diary", "Rocket Launcher (1)", "Scrub Brush", "Sealed Reagent Case", "Security Room Card Key", "Shotgun (1)", "Shotgun (4)", "Shotgun (7)", "Shotgun Rounds (10)", "Shotgun Rounds (12)", "Shotgun Rounds (14)", "Shotgun Rounds (21)", "Shotgun Rounds (24)", "Shotgun Rounds (3)", "Shotgun Rounds (5)", "Shotgun Rounds (7)", "Silver Key", "Spear", "Staff Room Key", "Stick", "Storage Room Key", "Sub Machinegun (20)", "Survival Knife", "T-Blood", "Turn Table Key", "UMB No.3", "V-Poison", "Valve Handle", "VP-017", "Wooden Pole", "Yellow Chemical Bottle (2)", "Yellow Chemical Bottle (3)", "Past the table +0 (a character's own item, see the note)", "Past the table +1 (a character's own item, see the note)", "Past the table +2 (a character's own item, see the note)", "Past the table +3 (a character's own item, see the note)", "Past the table +4 (a character's own item, see the note)", "Past the table +5 (a character's own item, see the note)", "Past the table +6 (a character's own item, see the note)", "Past the table +7 (a character's own item, see the note)", "Past the table +8 (a character's own item, see the note)", "Past the table +9 (a character's own item, see the note)", "Past the table +10 (a character's own item, see the note)", "Past the table +11 (a character's own item, see the note)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_item_slot_3"
+name = "Player 1 Item Slot Modifiers: Player 1 Item Slot 3"
+description = "Holds the item you pick in this slot (byte 0x004A68B6), like the code's ?? value: the mod writes the number the picked item has in the chosen Item Values table. An item that is not in that table leaves the slot alone. \"Past the table +N\" are the numbers after the table: your list's note says those are the characters' own items (in Outbreak on Normal, +0 is \"45 Auto for Kevin\").\n\nThe slot is held while the option is on: you cannot drop or use up that slot's item until you turn it off.\n\nYour code:\nPlayer 1 Item Slot 3 by bungholio\nGameShark v3-4 / Xploder v4\n004A68B6 000000??\n\nPlain code (your pnach):\n[Player 1 Item Slot Modifiers\\Player 1 Item Slot 3] 004A68B6 00000000\n\nWORKS AS WRITTEN on your disc. 0x004A68B6 is Player 1's block (0x004A5C30) + 0xC86, your disc's own item slots (game.bin reads and writes them, e.g. lbu a1,0xc84(v1)). Probe g_giant_slots: slot 1 = 0x42 and slot 2 = 0x39 showed a Shotgun (7) and a Magnum Revolver (6) in Kevin's inventory; the Special slot held 0x51, \"45 Auto for Kevin\" (sheet_giant_slots.png).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "Nothing", "45 Auto Rounds (12)", "45 Auto Rounds (14)", "45 Auto Rounds (2)", "45 Auto Rounds (4)", "45 Auto Rounds (5)", "45 Auto Rounds (7)", "Acid Rounds (2)", "Acid Rounds (4)", "Alcohol Bottle", "Ampule Shooter (0)", "Anti Virus (1)", "Anti Virus (L) (1)", "Antidote (1)", "Assault Rifle (30)", "Assault Rifle Magazine (10)", "Assault Rifle Magazine (20)", "Assault Rifle Magazine (30)", "Battery", "Blood Pack", "Blowtorch", "Blue Herb", "Blue Jewel", "Brass Spectacles", "Broken Shotgun", "Burst Handgun (12)", "Burst Handgun (20)", "Burst Rounds (10)", "Burst Rounds (2)", "Burst Rounds (3)", "Burst Rounds (4)", "Butcher Knife", "Card Key", "Card Key Level 1", "Card Key Level 2", "Charlie's ID Tag", "Concrete Piece", "Crutch", "Curved Iron Pipe", "Daylight", "Detonator Handle", "Detonator Main Unit", "First Aid Spray", "Folding Knife", "Forklift Key", "Frozen Wrench", "G. Launcher-Acid Rounds (2)", "G. Launcher-Acid Rounds (5)", "G. Launcher-Acid Rounds (7)", "G. Launcher-Burst Rounds (4)", "Gold Key", "Gray Chemical Bottle (2)", "Gray Chemical Bottle (3)", "Gray Chemical Bottle (5)", "Green Herb", "Handgun (0)", "Handgun (1)", "Handgun (10)", "Handgun (12)", "Handgun (15)", "Handgun (5)", "Handgun Magazine (15)", "Handgun Rounds", "Handgun Rounds (10)", "Handgun Rounds (12)", "Handgun Rounds (15)", "Handgun Rounds (16)", "Handgun Rounds (18)", "Handgun Rounds (20)", "Handgun Rounds (24)", "Handgun Rounds (30)", "Handgun Rounds (50)", "Handgun Rounds (60)", "Handgun SG (10)", "Handgun SG (13)", "Hemostat (1)", "Investigation Request", "Iron Pipe", "Key With A Red Tag", "Key With Blue Tag", "Lab Cardkey", "Len's ID Tag", "Light", "Lighter", "Magnum Handgun (1)", "Magnum Handgun (3)", "Magnum Handgun (5)", "Magnum Handgun (7)", "Magnum Revolver (6)", "Magnum Revolver Rounds (6)", "Male Nurse's Diary", "Nail Gun (20)", "Padlock Key", "Pesticide Spray", "Pesticide Spray (9)", "Raccoon Today", "Reagent Case", "Recovery Medicine (1)", "Recovery Medicine (L) (1)", "Recovery Medicine Base", "Red Herb", "Red Jewel", "Researcher's Diary", "Rocket Launcher (1)", "Scrub Brush", "Sealed Reagent Case", "Security Room Card Key", "Shotgun (1)", "Shotgun (4)", "Shotgun (7)", "Shotgun Rounds (10)", "Shotgun Rounds (12)", "Shotgun Rounds (14)", "Shotgun Rounds (21)", "Shotgun Rounds (24)", "Shotgun Rounds (3)", "Shotgun Rounds (5)", "Shotgun Rounds (7)", "Silver Key", "Spear", "Staff Room Key", "Stick", "Storage Room Key", "Sub Machinegun (20)", "Survival Knife", "T-Blood", "Turn Table Key", "UMB No.3", "V-Poison", "Valve Handle", "VP-017", "Wooden Pole", "Yellow Chemical Bottle (2)", "Yellow Chemical Bottle (3)", "Past the table +0 (a character's own item, see the note)", "Past the table +1 (a character's own item, see the note)", "Past the table +2 (a character's own item, see the note)", "Past the table +3 (a character's own item, see the note)", "Past the table +4 (a character's own item, see the note)", "Past the table +5 (a character's own item, see the note)", "Past the table +6 (a character's own item, see the note)", "Past the table +7 (a character's own item, see the note)", "Past the table +8 (a character's own item, see the note)", "Past the table +9 (a character's own item, see the note)", "Past the table +10 (a character's own item, see the note)", "Past the table +11 (a character's own item, see the note)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_item_slot_4"
+name = "Player 1 Item Slot Modifiers: Player 1 Item Slot 4"
+description = "Holds the item you pick in this slot (byte 0x004A68B7), like the code's ?? value: the mod writes the number the picked item has in the chosen Item Values table. An item that is not in that table leaves the slot alone. \"Past the table +N\" are the numbers after the table: your list's note says those are the characters' own items (in Outbreak on Normal, +0 is \"45 Auto for Kevin\").\n\nThe slot is held while the option is on: you cannot drop or use up that slot's item until you turn it off.\n\nYour code:\nPlayer 1 Item Slot 4 by bungholio\nGameShark v3-4 / Xploder v4\n004A68B7 000000??\n\nPlain code (your pnach):\n[Player 1 Item Slot Modifiers\\Player 1 Item Slot 4] 004A68B7 00000000\n\nWORKS AS WRITTEN on your disc. 0x004A68B7 is Player 1's block (0x004A5C30) + 0xC87, your disc's own item slots (game.bin reads and writes them, e.g. lbu a1,0xc84(v1)). Probe g_giant_slots: slot 1 = 0x42 and slot 2 = 0x39 showed a Shotgun (7) and a Magnum Revolver (6) in Kevin's inventory; the Special slot held 0x51, \"45 Auto for Kevin\" (sheet_giant_slots.png).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "Nothing", "45 Auto Rounds (12)", "45 Auto Rounds (14)", "45 Auto Rounds (2)", "45 Auto Rounds (4)", "45 Auto Rounds (5)", "45 Auto Rounds (7)", "Acid Rounds (2)", "Acid Rounds (4)", "Alcohol Bottle", "Ampule Shooter (0)", "Anti Virus (1)", "Anti Virus (L) (1)", "Antidote (1)", "Assault Rifle (30)", "Assault Rifle Magazine (10)", "Assault Rifle Magazine (20)", "Assault Rifle Magazine (30)", "Battery", "Blood Pack", "Blowtorch", "Blue Herb", "Blue Jewel", "Brass Spectacles", "Broken Shotgun", "Burst Handgun (12)", "Burst Handgun (20)", "Burst Rounds (10)", "Burst Rounds (2)", "Burst Rounds (3)", "Burst Rounds (4)", "Butcher Knife", "Card Key", "Card Key Level 1", "Card Key Level 2", "Charlie's ID Tag", "Concrete Piece", "Crutch", "Curved Iron Pipe", "Daylight", "Detonator Handle", "Detonator Main Unit", "First Aid Spray", "Folding Knife", "Forklift Key", "Frozen Wrench", "G. Launcher-Acid Rounds (2)", "G. Launcher-Acid Rounds (5)", "G. Launcher-Acid Rounds (7)", "G. Launcher-Burst Rounds (4)", "Gold Key", "Gray Chemical Bottle (2)", "Gray Chemical Bottle (3)", "Gray Chemical Bottle (5)", "Green Herb", "Handgun (0)", "Handgun (1)", "Handgun (10)", "Handgun (12)", "Handgun (15)", "Handgun (5)", "Handgun Magazine (15)", "Handgun Rounds", "Handgun Rounds (10)", "Handgun Rounds (12)", "Handgun Rounds (15)", "Handgun Rounds (16)", "Handgun Rounds (18)", "Handgun Rounds (20)", "Handgun Rounds (24)", "Handgun Rounds (30)", "Handgun Rounds (50)", "Handgun Rounds (60)", "Handgun SG (10)", "Handgun SG (13)", "Hemostat (1)", "Investigation Request", "Iron Pipe", "Key With A Red Tag", "Key With Blue Tag", "Lab Cardkey", "Len's ID Tag", "Light", "Lighter", "Magnum Handgun (1)", "Magnum Handgun (3)", "Magnum Handgun (5)", "Magnum Handgun (7)", "Magnum Revolver (6)", "Magnum Revolver Rounds (6)", "Male Nurse's Diary", "Nail Gun (20)", "Padlock Key", "Pesticide Spray", "Pesticide Spray (9)", "Raccoon Today", "Reagent Case", "Recovery Medicine (1)", "Recovery Medicine (L) (1)", "Recovery Medicine Base", "Red Herb", "Red Jewel", "Researcher's Diary", "Rocket Launcher (1)", "Scrub Brush", "Sealed Reagent Case", "Security Room Card Key", "Shotgun (1)", "Shotgun (4)", "Shotgun (7)", "Shotgun Rounds (10)", "Shotgun Rounds (12)", "Shotgun Rounds (14)", "Shotgun Rounds (21)", "Shotgun Rounds (24)", "Shotgun Rounds (3)", "Shotgun Rounds (5)", "Shotgun Rounds (7)", "Silver Key", "Spear", "Staff Room Key", "Stick", "Storage Room Key", "Sub Machinegun (20)", "Survival Knife", "T-Blood", "Turn Table Key", "UMB No.3", "V-Poison", "Valve Handle", "VP-017", "Wooden Pole", "Yellow Chemical Bottle (2)", "Yellow Chemical Bottle (3)", "Past the table +0 (a character's own item, see the note)", "Past the table +1 (a character's own item, see the note)", "Past the table +2 (a character's own item, see the note)", "Past the table +3 (a character's own item, see the note)", "Past the table +4 (a character's own item, see the note)", "Past the table +5 (a character's own item, see the note)", "Past the table +6 (a character's own item, see the note)", "Past the table +7 (a character's own item, see the note)", "Past the table +8 (a character's own item, see the note)", "Past the table +9 (a character's own item, see the note)", "Past the table +10 (a character's own item, see the note)", "Past the table +11 (a character's own item, see the note)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_special_item_slot"
+name = "Player 1 Item Slot Modifiers: Player 1 Special Item Slot"
+description = "Holds the item you pick in this slot (byte 0x004A68B8), like the code's ?? value: the mod writes the number the picked item has in the chosen Item Values table. An item that is not in that table leaves the slot alone. \"Past the table +N\" are the numbers after the table: your list's note says those are the characters' own items (in Outbreak on Normal, +0 is \"45 Auto for Kevin\").\n\nThe slot is held while the option is on: you cannot drop or use up that slot's item until you turn it off.\n\nYour code:\nPlayer 1 Special Item Slot by bungholio\nGameShark v3-4 / Xploder v4\n004A68B8 000000??\n\nPlain code (your pnach):\n[Player 1 Item Slot Modifiers\\Player 1 Special Item Slot] 004A68B8 00000000\n\nWORKS AS WRITTEN on your disc. 0x004A68B8 is Player 1's block (0x004A5C30) + 0xC88, your disc's own item slots (game.bin reads and writes them, e.g. lbu a1,0xc84(v1)). Probe g_giant_slots: slot 1 = 0x42 and slot 2 = 0x39 showed a Shotgun (7) and a Magnum Revolver (6) in Kevin's inventory; the Special slot held 0x51, \"45 Auto for Kevin\" (sheet_giant_slots.png).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "Nothing", "45 Auto Rounds (12)", "45 Auto Rounds (14)", "45 Auto Rounds (2)", "45 Auto Rounds (4)", "45 Auto Rounds (5)", "45 Auto Rounds (7)", "Acid Rounds (2)", "Acid Rounds (4)", "Alcohol Bottle", "Ampule Shooter (0)", "Anti Virus (1)", "Anti Virus (L) (1)", "Antidote (1)", "Assault Rifle (30)", "Assault Rifle Magazine (10)", "Assault Rifle Magazine (20)", "Assault Rifle Magazine (30)", "Battery", "Blood Pack", "Blowtorch", "Blue Herb", "Blue Jewel", "Brass Spectacles", "Broken Shotgun", "Burst Handgun (12)", "Burst Handgun (20)", "Burst Rounds (10)", "Burst Rounds (2)", "Burst Rounds (3)", "Burst Rounds (4)", "Butcher Knife", "Card Key", "Card Key Level 1", "Card Key Level 2", "Charlie's ID Tag", "Concrete Piece", "Crutch", "Curved Iron Pipe", "Daylight", "Detonator Handle", "Detonator Main Unit", "First Aid Spray", "Folding Knife", "Forklift Key", "Frozen Wrench", "G. Launcher-Acid Rounds (2)", "G. Launcher-Acid Rounds (5)", "G. Launcher-Acid Rounds (7)", "G. Launcher-Burst Rounds (4)", "Gold Key", "Gray Chemical Bottle (2)", "Gray Chemical Bottle (3)", "Gray Chemical Bottle (5)", "Green Herb", "Handgun (0)", "Handgun (1)", "Handgun (10)", "Handgun (12)", "Handgun (15)", "Handgun (5)", "Handgun Magazine (15)", "Handgun Rounds", "Handgun Rounds (10)", "Handgun Rounds (12)", "Handgun Rounds (15)", "Handgun Rounds (16)", "Handgun Rounds (18)", "Handgun Rounds (20)", "Handgun Rounds (24)", "Handgun Rounds (30)", "Handgun Rounds (50)", "Handgun Rounds (60)", "Handgun SG (10)", "Handgun SG (13)", "Hemostat (1)", "Investigation Request", "Iron Pipe", "Key With A Red Tag", "Key With Blue Tag", "Lab Cardkey", "Len's ID Tag", "Light", "Lighter", "Magnum Handgun (1)", "Magnum Handgun (3)", "Magnum Handgun (5)", "Magnum Handgun (7)", "Magnum Revolver (6)", "Magnum Revolver Rounds (6)", "Male Nurse's Diary", "Nail Gun (20)", "Padlock Key", "Pesticide Spray", "Pesticide Spray (9)", "Raccoon Today", "Reagent Case", "Recovery Medicine (1)", "Recovery Medicine (L) (1)", "Recovery Medicine Base", "Red Herb", "Red Jewel", "Researcher's Diary", "Rocket Launcher (1)", "Scrub Brush", "Sealed Reagent Case", "Security Room Card Key", "Shotgun (1)", "Shotgun (4)", "Shotgun (7)", "Shotgun Rounds (10)", "Shotgun Rounds (12)", "Shotgun Rounds (14)", "Shotgun Rounds (21)", "Shotgun Rounds (24)", "Shotgun Rounds (3)", "Shotgun Rounds (5)", "Shotgun Rounds (7)", "Silver Key", "Spear", "Staff Room Key", "Stick", "Storage Room Key", "Sub Machinegun (20)", "Survival Knife", "T-Blood", "Turn Table Key", "UMB No.3", "V-Poison", "Valve Handle", "VP-017", "Wooden Pole", "Yellow Chemical Bottle (2)", "Yellow Chemical Bottle (3)", "Past the table +0 (a character's own item, see the note)", "Past the table +1 (a character's own item, see the note)", "Past the table +2 (a character's own item, see the note)", "Past the table +3 (a character's own item, see the note)", "Past the table +4 (a character's own item, see the note)", "Past the table +5 (a character's own item, see the note)", "Past the table +6 (a character's own item, see the note)", "Past the table +7 (a character's own item, see the note)", "Past the table +8 (a character's own item, see the note)", "Past the table +9 (a character's own item, see the note)", "Past the table +10 (a character's own item, see the note)", "Past the table +11 (a character's own item, see the note)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_yoko_item_slot_5"
+name = "Player 1 Item Slot Modifiers: Player 1 Yoko Item Slot 5"
+description = "Holds the item you pick in this slot (byte 0x004A68B9), like the code's ?? value: the mod writes the number the picked item has in the chosen Item Values table. An item that is not in that table leaves the slot alone. \"Past the table +N\" are the numbers after the table: your list's note says those are the characters' own items (in Outbreak on Normal, +0 is \"45 Auto for Kevin\").\n\nThe slot is held while the option is on: you cannot drop or use up that slot's item until you turn it off.\n\nYour code:\nPlayer 1 Yoko Item Slot 5 by bungholio\nGameShark v3-4 / Xploder v4\n004A68B9 000000??\n\nPlain code (your pnach):\n[Player 1 Item Slot Modifiers\\Player 1 Yoko Item Slot 5] 004A68B9 00000000\n\nWORKS AS WRITTEN on your disc. 0x004A68B9 is Player 1's block (0x004A5C30) + 0xC89, your disc's own item slots (game.bin reads and writes them, e.g. lbu a1,0xc84(v1)). Probe g_giant_slots: slot 1 = 0x42 and slot 2 = 0x39 showed a Shotgun (7) and a Magnum Revolver (6) in Kevin's inventory; the Special slot held 0x51, \"45 Auto for Kevin\" (sheet_giant_slots.png).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "Nothing", "45 Auto Rounds (12)", "45 Auto Rounds (14)", "45 Auto Rounds (2)", "45 Auto Rounds (4)", "45 Auto Rounds (5)", "45 Auto Rounds (7)", "Acid Rounds (2)", "Acid Rounds (4)", "Alcohol Bottle", "Ampule Shooter (0)", "Anti Virus (1)", "Anti Virus (L) (1)", "Antidote (1)", "Assault Rifle (30)", "Assault Rifle Magazine (10)", "Assault Rifle Magazine (20)", "Assault Rifle Magazine (30)", "Battery", "Blood Pack", "Blowtorch", "Blue Herb", "Blue Jewel", "Brass Spectacles", "Broken Shotgun", "Burst Handgun (12)", "Burst Handgun (20)", "Burst Rounds (10)", "Burst Rounds (2)", "Burst Rounds (3)", "Burst Rounds (4)", "Butcher Knife", "Card Key", "Card Key Level 1", "Card Key Level 2", "Charlie's ID Tag", "Concrete Piece", "Crutch", "Curved Iron Pipe", "Daylight", "Detonator Handle", "Detonator Main Unit", "First Aid Spray", "Folding Knife", "Forklift Key", "Frozen Wrench", "G. Launcher-Acid Rounds (2)", "G. Launcher-Acid Rounds (5)", "G. Launcher-Acid Rounds (7)", "G. Launcher-Burst Rounds (4)", "Gold Key", "Gray Chemical Bottle (2)", "Gray Chemical Bottle (3)", "Gray Chemical Bottle (5)", "Green Herb", "Handgun (0)", "Handgun (1)", "Handgun (10)", "Handgun (12)", "Handgun (15)", "Handgun (5)", "Handgun Magazine (15)", "Handgun Rounds", "Handgun Rounds (10)", "Handgun Rounds (12)", "Handgun Rounds (15)", "Handgun Rounds (16)", "Handgun Rounds (18)", "Handgun Rounds (20)", "Handgun Rounds (24)", "Handgun Rounds (30)", "Handgun Rounds (50)", "Handgun Rounds (60)", "Handgun SG (10)", "Handgun SG (13)", "Hemostat (1)", "Investigation Request", "Iron Pipe", "Key With A Red Tag", "Key With Blue Tag", "Lab Cardkey", "Len's ID Tag", "Light", "Lighter", "Magnum Handgun (1)", "Magnum Handgun (3)", "Magnum Handgun (5)", "Magnum Handgun (7)", "Magnum Revolver (6)", "Magnum Revolver Rounds (6)", "Male Nurse's Diary", "Nail Gun (20)", "Padlock Key", "Pesticide Spray", "Pesticide Spray (9)", "Raccoon Today", "Reagent Case", "Recovery Medicine (1)", "Recovery Medicine (L) (1)", "Recovery Medicine Base", "Red Herb", "Red Jewel", "Researcher's Diary", "Rocket Launcher (1)", "Scrub Brush", "Sealed Reagent Case", "Security Room Card Key", "Shotgun (1)", "Shotgun (4)", "Shotgun (7)", "Shotgun Rounds (10)", "Shotgun Rounds (12)", "Shotgun Rounds (14)", "Shotgun Rounds (21)", "Shotgun Rounds (24)", "Shotgun Rounds (3)", "Shotgun Rounds (5)", "Shotgun Rounds (7)", "Silver Key", "Spear", "Staff Room Key", "Stick", "Storage Room Key", "Sub Machinegun (20)", "Survival Knife", "T-Blood", "Turn Table Key", "UMB No.3", "V-Poison", "Valve Handle", "VP-017", "Wooden Pole", "Yellow Chemical Bottle (2)", "Yellow Chemical Bottle (3)", "Past the table +0 (a character's own item, see the note)", "Past the table +1 (a character's own item, see the note)", "Past the table +2 (a character's own item, see the note)", "Past the table +3 (a character's own item, see the note)", "Past the table +4 (a character's own item, see the note)", "Past the table +5 (a character's own item, see the note)", "Past the table +6 (a character's own item, see the note)", "Past the table +7 (a character's own item, see the note)", "Past the table +8 (a character's own item, see the note)", "Past the table +9 (a character's own item, see the note)", "Past the table +10 (a character's own item, see the note)", "Past the table +11 (a character's own item, see the note)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_yoko_item_slot_6"
+name = "Player 1 Item Slot Modifiers: Player 1 Yoko Item Slot 6"
+description = "Holds the item you pick in this slot (byte 0x004A68BA), like the code's ?? value: the mod writes the number the picked item has in the chosen Item Values table. An item that is not in that table leaves the slot alone. \"Past the table +N\" are the numbers after the table: your list's note says those are the characters' own items (in Outbreak on Normal, +0 is \"45 Auto for Kevin\").\n\nThe slot is held while the option is on: you cannot drop or use up that slot's item until you turn it off.\n\nYour code:\nPlayer 1 Yoko Item Slot 6 by bungholio\nGameShark v3-4 / Xploder v4\n004A68BA 000000??\n\nPlain code (your pnach):\n[Player 1 Item Slot Modifiers\\Player 1 Yoko Item Slot 6] 004A68BA 00000000\n\nWORKS AS WRITTEN on your disc. 0x004A68BA is Player 1's block (0x004A5C30) + 0xC8A, your disc's own item slots (game.bin reads and writes them, e.g. lbu a1,0xc84(v1)). Probe g_giant_slots: slot 1 = 0x42 and slot 2 = 0x39 showed a Shotgun (7) and a Magnum Revolver (6) in Kevin's inventory; the Special slot held 0x51, \"45 Auto for Kevin\" (sheet_giant_slots.png).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "Nothing", "45 Auto Rounds (12)", "45 Auto Rounds (14)", "45 Auto Rounds (2)", "45 Auto Rounds (4)", "45 Auto Rounds (5)", "45 Auto Rounds (7)", "Acid Rounds (2)", "Acid Rounds (4)", "Alcohol Bottle", "Ampule Shooter (0)", "Anti Virus (1)", "Anti Virus (L) (1)", "Antidote (1)", "Assault Rifle (30)", "Assault Rifle Magazine (10)", "Assault Rifle Magazine (20)", "Assault Rifle Magazine (30)", "Battery", "Blood Pack", "Blowtorch", "Blue Herb", "Blue Jewel", "Brass Spectacles", "Broken Shotgun", "Burst Handgun (12)", "Burst Handgun (20)", "Burst Rounds (10)", "Burst Rounds (2)", "Burst Rounds (3)", "Burst Rounds (4)", "Butcher Knife", "Card Key", "Card Key Level 1", "Card Key Level 2", "Charlie's ID Tag", "Concrete Piece", "Crutch", "Curved Iron Pipe", "Daylight", "Detonator Handle", "Detonator Main Unit", "First Aid Spray", "Folding Knife", "Forklift Key", "Frozen Wrench", "G. Launcher-Acid Rounds (2)", "G. Launcher-Acid Rounds (5)", "G. Launcher-Acid Rounds (7)", "G. Launcher-Burst Rounds (4)", "Gold Key", "Gray Chemical Bottle (2)", "Gray Chemical Bottle (3)", "Gray Chemical Bottle (5)", "Green Herb", "Handgun (0)", "Handgun (1)", "Handgun (10)", "Handgun (12)", "Handgun (15)", "Handgun (5)", "Handgun Magazine (15)", "Handgun Rounds", "Handgun Rounds (10)", "Handgun Rounds (12)", "Handgun Rounds (15)", "Handgun Rounds (16)", "Handgun Rounds (18)", "Handgun Rounds (20)", "Handgun Rounds (24)", "Handgun Rounds (30)", "Handgun Rounds (50)", "Handgun Rounds (60)", "Handgun SG (10)", "Handgun SG (13)", "Hemostat (1)", "Investigation Request", "Iron Pipe", "Key With A Red Tag", "Key With Blue Tag", "Lab Cardkey", "Len's ID Tag", "Light", "Lighter", "Magnum Handgun (1)", "Magnum Handgun (3)", "Magnum Handgun (5)", "Magnum Handgun (7)", "Magnum Revolver (6)", "Magnum Revolver Rounds (6)", "Male Nurse's Diary", "Nail Gun (20)", "Padlock Key", "Pesticide Spray", "Pesticide Spray (9)", "Raccoon Today", "Reagent Case", "Recovery Medicine (1)", "Recovery Medicine (L) (1)", "Recovery Medicine Base", "Red Herb", "Red Jewel", "Researcher's Diary", "Rocket Launcher (1)", "Scrub Brush", "Sealed Reagent Case", "Security Room Card Key", "Shotgun (1)", "Shotgun (4)", "Shotgun (7)", "Shotgun Rounds (10)", "Shotgun Rounds (12)", "Shotgun Rounds (14)", "Shotgun Rounds (21)", "Shotgun Rounds (24)", "Shotgun Rounds (3)", "Shotgun Rounds (5)", "Shotgun Rounds (7)", "Silver Key", "Spear", "Staff Room Key", "Stick", "Storage Room Key", "Sub Machinegun (20)", "Survival Knife", "T-Blood", "Turn Table Key", "UMB No.3", "V-Poison", "Valve Handle", "VP-017", "Wooden Pole", "Yellow Chemical Bottle (2)", "Yellow Chemical Bottle (3)", "Past the table +0 (a character's own item, see the note)", "Past the table +1 (a character's own item, see the note)", "Past the table +2 (a character's own item, see the note)", "Past the table +3 (a character's own item, see the note)", "Past the table +4 (a character's own item, see the note)", "Past the table +5 (a character's own item, see the note)", "Past the table +6 (a character's own item, see the note)", "Past the table +7 (a character's own item, see the note)", "Past the table +8 (a character's own item, see the note)", "Past the table +9 (a character's own item, see the note)", "Past the table +10 (a character's own item, see the note)", "Past the table +11 (a character's own item, see the note)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_yoko_item_slot_7"
+name = "Player 1 Item Slot Modifiers: Player 1 Yoko Item Slot 7"
+description = "Holds the item you pick in this slot (byte 0x004A68BB), like the code's ?? value: the mod writes the number the picked item has in the chosen Item Values table. An item that is not in that table leaves the slot alone. \"Past the table +N\" are the numbers after the table: your list's note says those are the characters' own items (in Outbreak on Normal, +0 is \"45 Auto for Kevin\").\n\nThe slot is held while the option is on: you cannot drop or use up that slot's item until you turn it off.\n\nYour code:\nPlayer 1 Yoko Item Slot 7 by bungholio\nGameShark v3-4 / Xploder v4\n004A68BB 000000??\n\nPlain code (your pnach):\n[Player 1 Item Slot Modifiers\\Player 1 Yoko Item Slot 7] 004A68BB 00000000\n\nWORKS AS WRITTEN on your disc. 0x004A68BB is Player 1's block (0x004A5C30) + 0xC8B, your disc's own item slots (game.bin reads and writes them, e.g. lbu a1,0xc84(v1)). Probe g_giant_slots: slot 1 = 0x42 and slot 2 = 0x39 showed a Shotgun (7) and a Magnum Revolver (6) in Kevin's inventory; the Special slot held 0x51, \"45 Auto for Kevin\" (sheet_giant_slots.png).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "Nothing", "45 Auto Rounds (12)", "45 Auto Rounds (14)", "45 Auto Rounds (2)", "45 Auto Rounds (4)", "45 Auto Rounds (5)", "45 Auto Rounds (7)", "Acid Rounds (2)", "Acid Rounds (4)", "Alcohol Bottle", "Ampule Shooter (0)", "Anti Virus (1)", "Anti Virus (L) (1)", "Antidote (1)", "Assault Rifle (30)", "Assault Rifle Magazine (10)", "Assault Rifle Magazine (20)", "Assault Rifle Magazine (30)", "Battery", "Blood Pack", "Blowtorch", "Blue Herb", "Blue Jewel", "Brass Spectacles", "Broken Shotgun", "Burst Handgun (12)", "Burst Handgun (20)", "Burst Rounds (10)", "Burst Rounds (2)", "Burst Rounds (3)", "Burst Rounds (4)", "Butcher Knife", "Card Key", "Card Key Level 1", "Card Key Level 2", "Charlie's ID Tag", "Concrete Piece", "Crutch", "Curved Iron Pipe", "Daylight", "Detonator Handle", "Detonator Main Unit", "First Aid Spray", "Folding Knife", "Forklift Key", "Frozen Wrench", "G. Launcher-Acid Rounds (2)", "G. Launcher-Acid Rounds (5)", "G. Launcher-Acid Rounds (7)", "G. Launcher-Burst Rounds (4)", "Gold Key", "Gray Chemical Bottle (2)", "Gray Chemical Bottle (3)", "Gray Chemical Bottle (5)", "Green Herb", "Handgun (0)", "Handgun (1)", "Handgun (10)", "Handgun (12)", "Handgun (15)", "Handgun (5)", "Handgun Magazine (15)", "Handgun Rounds", "Handgun Rounds (10)", "Handgun Rounds (12)", "Handgun Rounds (15)", "Handgun Rounds (16)", "Handgun Rounds (18)", "Handgun Rounds (20)", "Handgun Rounds (24)", "Handgun Rounds (30)", "Handgun Rounds (50)", "Handgun Rounds (60)", "Handgun SG (10)", "Handgun SG (13)", "Hemostat (1)", "Investigation Request", "Iron Pipe", "Key With A Red Tag", "Key With Blue Tag", "Lab Cardkey", "Len's ID Tag", "Light", "Lighter", "Magnum Handgun (1)", "Magnum Handgun (3)", "Magnum Handgun (5)", "Magnum Handgun (7)", "Magnum Revolver (6)", "Magnum Revolver Rounds (6)", "Male Nurse's Diary", "Nail Gun (20)", "Padlock Key", "Pesticide Spray", "Pesticide Spray (9)", "Raccoon Today", "Reagent Case", "Recovery Medicine (1)", "Recovery Medicine (L) (1)", "Recovery Medicine Base", "Red Herb", "Red Jewel", "Researcher's Diary", "Rocket Launcher (1)", "Scrub Brush", "Sealed Reagent Case", "Security Room Card Key", "Shotgun (1)", "Shotgun (4)", "Shotgun (7)", "Shotgun Rounds (10)", "Shotgun Rounds (12)", "Shotgun Rounds (14)", "Shotgun Rounds (21)", "Shotgun Rounds (24)", "Shotgun Rounds (3)", "Shotgun Rounds (5)", "Shotgun Rounds (7)", "Silver Key", "Spear", "Staff Room Key", "Stick", "Storage Room Key", "Sub Machinegun (20)", "Survival Knife", "T-Blood", "Turn Table Key", "UMB No.3", "V-Poison", "Valve Handle", "VP-017", "Wooden Pole", "Yellow Chemical Bottle (2)", "Yellow Chemical Bottle (3)", "Past the table +0 (a character's own item, see the note)", "Past the table +1 (a character's own item, see the note)", "Past the table +2 (a character's own item, see the note)", "Past the table +3 (a character's own item, see the note)", "Past the table +4 (a character's own item, see the note)", "Past the table +5 (a character's own item, see the note)", "Past the table +6 (a character's own item, see the note)", "Past the table +7 (a character's own item, see the note)", "Past the table +8 (a character's own item, see the note)", "Past the table +9 (a character's own item, see the note)", "Past the table +10 (a character's own item, see the note)", "Past the table +11 (a character's own item, see the note)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_yoko_item_slot_8"
+name = "Player 1 Item Slot Modifiers: Player 1 Yoko Item Slot 8"
+description = "Holds the item you pick in this slot (byte 0x004A68BC), like the code's ?? value: the mod writes the number the picked item has in the chosen Item Values table. An item that is not in that table leaves the slot alone. \"Past the table +N\" are the numbers after the table: your list's note says those are the characters' own items (in Outbreak on Normal, +0 is \"45 Auto for Kevin\").\n\nThe slot is held while the option is on: you cannot drop or use up that slot's item until you turn it off.\n\nYour code:\nPlayer 1 Yoko Item Slot 8 by bungholio\nGameShark v3-4 / Xploder v4\n004A68BC 000000??\n\nPlain code (your pnach):\n[Player 1 Item Slot Modifiers\\Player 1 Yoko Item Slot 8] 004A68BC 00000000\n\nWORKS AS WRITTEN on your disc. 0x004A68BC is Player 1's block (0x004A5C30) + 0xC8C, your disc's own item slots (game.bin reads and writes them, e.g. lbu a1,0xc84(v1)). Probe g_giant_slots: slot 1 = 0x42 and slot 2 = 0x39 showed a Shotgun (7) and a Magnum Revolver (6) in Kevin's inventory; the Special slot held 0x51, \"45 Auto for Kevin\" (sheet_giant_slots.png).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "Nothing", "45 Auto Rounds (12)", "45 Auto Rounds (14)", "45 Auto Rounds (2)", "45 Auto Rounds (4)", "45 Auto Rounds (5)", "45 Auto Rounds (7)", "Acid Rounds (2)", "Acid Rounds (4)", "Alcohol Bottle", "Ampule Shooter (0)", "Anti Virus (1)", "Anti Virus (L) (1)", "Antidote (1)", "Assault Rifle (30)", "Assault Rifle Magazine (10)", "Assault Rifle Magazine (20)", "Assault Rifle Magazine (30)", "Battery", "Blood Pack", "Blowtorch", "Blue Herb", "Blue Jewel", "Brass Spectacles", "Broken Shotgun", "Burst Handgun (12)", "Burst Handgun (20)", "Burst Rounds (10)", "Burst Rounds (2)", "Burst Rounds (3)", "Burst Rounds (4)", "Butcher Knife", "Card Key", "Card Key Level 1", "Card Key Level 2", "Charlie's ID Tag", "Concrete Piece", "Crutch", "Curved Iron Pipe", "Daylight", "Detonator Handle", "Detonator Main Unit", "First Aid Spray", "Folding Knife", "Forklift Key", "Frozen Wrench", "G. Launcher-Acid Rounds (2)", "G. Launcher-Acid Rounds (5)", "G. Launcher-Acid Rounds (7)", "G. Launcher-Burst Rounds (4)", "Gold Key", "Gray Chemical Bottle (2)", "Gray Chemical Bottle (3)", "Gray Chemical Bottle (5)", "Green Herb", "Handgun (0)", "Handgun (1)", "Handgun (10)", "Handgun (12)", "Handgun (15)", "Handgun (5)", "Handgun Magazine (15)", "Handgun Rounds", "Handgun Rounds (10)", "Handgun Rounds (12)", "Handgun Rounds (15)", "Handgun Rounds (16)", "Handgun Rounds (18)", "Handgun Rounds (20)", "Handgun Rounds (24)", "Handgun Rounds (30)", "Handgun Rounds (50)", "Handgun Rounds (60)", "Handgun SG (10)", "Handgun SG (13)", "Hemostat (1)", "Investigation Request", "Iron Pipe", "Key With A Red Tag", "Key With Blue Tag", "Lab Cardkey", "Len's ID Tag", "Light", "Lighter", "Magnum Handgun (1)", "Magnum Handgun (3)", "Magnum Handgun (5)", "Magnum Handgun (7)", "Magnum Revolver (6)", "Magnum Revolver Rounds (6)", "Male Nurse's Diary", "Nail Gun (20)", "Padlock Key", "Pesticide Spray", "Pesticide Spray (9)", "Raccoon Today", "Reagent Case", "Recovery Medicine (1)", "Recovery Medicine (L) (1)", "Recovery Medicine Base", "Red Herb", "Red Jewel", "Researcher's Diary", "Rocket Launcher (1)", "Scrub Brush", "Sealed Reagent Case", "Security Room Card Key", "Shotgun (1)", "Shotgun (4)", "Shotgun (7)", "Shotgun Rounds (10)", "Shotgun Rounds (12)", "Shotgun Rounds (14)", "Shotgun Rounds (21)", "Shotgun Rounds (24)", "Shotgun Rounds (3)", "Shotgun Rounds (5)", "Shotgun Rounds (7)", "Silver Key", "Spear", "Staff Room Key", "Stick", "Storage Room Key", "Sub Machinegun (20)", "Survival Knife", "T-Blood", "Turn Table Key", "UMB No.3", "V-Poison", "Valve Handle", "VP-017", "Wooden Pole", "Yellow Chemical Bottle (2)", "Yellow Chemical Bottle (3)", "Past the table +0 (a character's own item, see the note)", "Past the table +1 (a character's own item, see the note)", "Past the table +2 (a character's own item, see the note)", "Past the table +3 (a character's own item, see the note)", "Past the table +4 (a character's own item, see the note)", "Past the table +5 (a character's own item, see the note)", "Past the table +6 (a character's own item, see the note)", "Past the table +7 (a character's own item, see the note)", "Past the table +8 (a character's own item, see the note)", "Past the table +9 (a character's own item, see the note)", "Past the table +10 (a character's own item, see the note)", "Past the table +11 (a character's own item, see the note)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_completed_events_1"
+name = "Scenario Completion Codes: Completed Events Modifier 1 Of 2"
+description = "The first word of the scenario's completed-events bits (0x003B84F8) is held at the value below.\n\nYour code:\nCompleted Events Modifier 1 Of 2 by bungholio\nGameShark v3-4 / Xploder v4\n203B84F8 ????????\n\nPlain code (your pnach):\n[Scenario Completion Codes\\Completed Events Modifier 1 Of 2] 203B84F8 00000000\n\nWORKS AS WRITTEN on your disc. Your disc's own events word: submain sets bit N of 0x003B84F8/0x003B84FC for event N (0x0037C470). Only visible on the results screen at the end of a scenario; not observed in a probe.\n\nSave data: Indirect: at the end of a scenario the results (completion ratio) are recorded. The author: all F's probably gives more than a 100% completion ratio.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_completed_events_1_value"
+name = "Completed Events Modifier 1 Of 2: value"
+description = "The ???????? value of Completed Events Modifier 1 Of 2 (bits of completed events). Author: \"Just set both of them to all F's to have all events completed and probably get more than a 100% completion ratio\"."
+type = "Number"
+min = 0
+max = 4294967295
+step = 1
+precision = 0
+percent = false
+default = 0
+
+[[manifest.config_options]]
+id = "bh_completed_events_2"
+name = "Scenario Completion Codes: Completed Events Modifier 2 Of 2"
+description = "The second word of the completed-events bits (0x003B84FC) is held at the value below.\n\nYour code:\nCompleted Events Modifier 2 Of 2 by bungholio\nGameShark v3-4 / Xploder v4\n203B84FC ????????\n\nPlain code (your pnach):\n[Scenario Completion Codes\\Completed Events Modifier 2 Of 2] 203B84FC 00000000\n\nWORKS AS WRITTEN on your disc. As Modifier 1 Of 2 (submain reads it at 0x0037E88C). Not observed in a probe.\n\nSave data: Indirect, as Modifier 1 Of 2.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_completed_events_2_value"
+name = "Completed Events Modifier 2 Of 2: value"
+description = "The ???????? value of Completed Events Modifier 2 Of 2."
+type = "Number"
+min = 0
+max = 4294967295
+step = 1
+precision = 0
+percent = false
+default = 0
+
+[[manifest.config_options]]
+id = "bh_result_points_best_record"
+name = "Scenario Completion Codes: Determines Whether Your Result Points Are A New Best Record"
+description = "The results screen's \"new best record\" flag for result points (byte 0x003B8505).\n\nYour code:\nDetermines Whether Your Result Points Are A New Best Record by bungholio\nGameShark v3-4 / Xploder v4\n003B8505 000000??\n\nPlain code (your pnach):\n[Scenario Completion Codes\\Determines Whether Your Result Points Are A New Best Record] 003B8505 000000FF\n\nWORKS AS WRITTEN on your disc. The results code of your disc reads this byte (single.bin 0x00827AD4, game.bin 0x006016E0). Visible only on the results screen; not observed in a probe.\n\nSave data: Indirect: the results decide what is recorded.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "0 - result points aren't a new best record", "ff - result points are a new best record" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_completion_time_best_record"
+name = "Scenario Completion Codes: Determines Whether Your Scenario Completion Time is A New Best Record"
+description = "The results screen's \"new best record\" flag for the play time (byte 0x003B8506).\n\nYour code:\nDetermines Whether Your Scenario Completion Time is A New Best Record by bungholio\nGameShark v3-4 / Xploder v4\n003B8506 000000??\n\nPlain code (your pnach):\n[Scenario Completion Codes\\Determines Whether Your Scenario Completion Time is A New Best Record] 003B8506 000000FF\n\nWORKS AS WRITTEN on your disc. Read by the results code (single.bin 0x00827AAC); reset by submain at 0x0037C518. Not observed in a probe.\n\nSave data: Indirect.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "0 - play time isn't a new best record", "ff - play time is a new best record" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_no_damage_clear"
+name = "Scenario Completion Codes: No Damage Clear"
+description = "The \"damage taken\" flag of the scenario (byte 0x003B84F4) is held at 0, so it ends as a no-damage clear.\n\nYour code:\nNo Damage Clear by bungholio\nGameShark v3-4 / Xploder v4\n003B84F4 00000000\n\nPlain code (your pnach):\n[Scenario Completion Codes\\No Damage Clear] 003B84F4 00000000\n\nWORKS AS WRITTEN on your disc. game.bin sets it when you are hurt (0x00660F4C sb a0,0x84F4); the results code reads it (single.bin 0x00827B64). Not observed in a probe.\n\nSave data: Indirect.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_no_weapon_clear"
+name = "Scenario Completion Codes: No Weapon Clear"
+description = "The \"weapon used\" flag (byte 0x003B84F5) is held at 0, so it ends as a no-weapon clear.\n\nYour code:\nNo Weapon Clear by bungholio\nGameShark v3-4 / Xploder v4\n003B84F5 00000000\n\nPlain code (your pnach):\n[Scenario Completion Codes\\No Weapon Clear] 003B84F5 00000000\n\nWORKS AS WRITTEN on your disc. game.bin sets it when a weapon is used (e.g. 0x0065E7B0 sb v1,0x84F5); the results code reads it (single.bin 0x00827BA4). Not observed in a probe.\n\nSave data: Indirect.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_result_points_modifier"
+name = "Scenario Completion Codes: Result Points Modifier"
+description = "The scenario's result points (0x003B84B4) are held at the value below.\n\nYour code:\nResult Points Modifier by bungholio\nGameShark v3-4 / Xploder v4\n203B84B4 ????????\n\nPlain code (your pnach):\n[Scenario Completion Codes\\Result Points Modifier] 203B84B4 00000000\n\nWORKS AS WRITTEN on your disc. Read by the results code (single.bin 0x00827E04, game.bin 0x00601990) and submain (0x0037E7EC). Not observed in a probe.\n\nSave data: Indirect: the results add the points to your collection points. The value is limited to 99,999,999, the display maximum.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_result_points_modifier_value"
+name = "Result Points Modifier: value"
+description = "The ???????? value of Result Points Modifier (points, 0 to 99,999,999)."
+type = "Number"
+min = 0
+max = 99999999
+step = 1
+precision = 0
+percent = false
+default = 0
+
+[[manifest.config_options]]
+id = "bh_completion_time_rank"
+name = "Scenario Completion Codes: Scenario Completion Time Rank Modifier"
+description = "The play-time rank of the results (byte 0x003B8507).\n\nYour code:\nScenario Completion Time Rank Modifier by bungholio\nGameShark v3-4 / Xploder v4\n003B8507 000000??\n\nPlain code (your pnach):\n[Scenario Completion Codes\\Scenario Completion Time Rank Modifier] 003B8507 00000000\n\nWORKS AS WRITTEN on your disc. Read by the results code (single.bin 0x00827D24) and written by submain (0x0037E0C4..0x0037E168). Not observed in a probe.\n\nSave data: Indirect.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "0 - F Rank", "1 - E Rank", "2 - D Rank", "3 - C Rank", "4 - B Rank", "5 - A Rank", "6 - S Rank" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_survivor_modifier"
+name = "Scenario Completion Codes: Survivor Modifier"
+description = "The number of survivors of the results (byte 0x003B84F6).\n\nYour code:\nSurvivor Modifier by bungholio\nGameShark v3-4 / Xploder v4\n003B84F6 000000??\n\nPlain code (your pnach):\n[Scenario Completion Codes\\Survivor Modifier] 003B84F6 00000000\n\nWORKS AS WRITTEN on your disc. Written by game.bin at 0x0068EFB4 and read by submain (0x0037D384 ...). Not observed in a probe.\n\nSave data: Indirect.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "0 - 0/3", "1 - 1/3", "2 - 2/3", "3 - 3/3" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "mc_infinite_ammo_all_weapons"
+name = "Single Play Codes: Infinite Ammo (All Weapons)"
+description = "Firing does not use up rounds: the count stays (the \"count - 1\" at 0x005B2008 becomes \"count - 0\").\n\nYour code:\nInfinite Ammo (All Weapons) by MadCatz\nGameShark v3-4 / Xploder v4\n7603A0D0 00000000\n 2841EDED 6F1B7A65\n\nAlso in your list as:\nInfinite Ammo (All Weapons) by MadCatz\nGameShark v3-4 / Xploder v4\n2841EDED 6F1B7A65\n\nSingle Play Codes: Infinite: Ammo (All Weapons) by MadCatz\nGameShark v3-4 / Xploder v4\n249017A8 30F157D9\n\nPlain code (your pnach):\n[Single Play Codes\\Infinite Ammo (All Weapons)] 205B2008 24820000\n[Single Play Codes: Infinite: Ammo (All Weapons)] 205B1FD8 24820000\n\nWORKS AS WRITTEN on your disc. Written for your disc: 0x005B2008 holds addiu v0,a0,-1 (the new round count) and the code makes it addiu v0,a0,0. Probe ammo_madcatz (cheat analysis): 7 rounds stay 7. The colon form in your list (Single Play Codes: Infinite: Ammo (All Weapons), 205B1FD8) is the original release's address: on your disc 0x005B1FD8 is jal 0x005B2590, so as written it would break that call; moved by the +0x30 of this code it is this same write.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "mc_infinite_health"
+name = "Single Play Codes: Infinite Health"
+description = "Player 1's HP and max HP are held at 2300 each (0x004A6174 = 08FC08FC).\n\nYour code:\nInfinite Health by MadCatz\nGameShark v3-4 / Xploder v4\n760B6030 00000000\n 28509FAE A1456966\n\nAlso in your list as:\nInfinite Health by MadCatz\nGameShark v3-4 / Xploder v4\n28509FAE A1456966\n\nSingle Play Codes: Infinite: Health by MadCatz\nGameShark v3-4 / Xploder v4\n24C6BD4E FCE3C1A0\n\nPlain code (your pnach):\n[Single Play Codes\\Infinite Health] 204A6174 08FC08FC\n[Single Play Codes: Infinite: Health] 204A60F4 08FC08FC\n\nWORKS AS WRITTEN on your disc. Written for your disc (Player 1's HP word 0x004A6174). 2300 is Kevin's value: as written, another character also gets HP and max HP 2300. The colon form (204A60F4) is the original release's address, 0x80 lower, the same word.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "mc_max_result_points"
+name = "Single Play Codes: Max Result Points"
+description = "The collection points are set to 99,999.\n\nYour code:\nMax Result Points by MadCatz\nGameShark v3-4 / Xploder v4\n760B50E0 00000000\n 282B24E6 0C965526\n\nAlso in your list as:\nMax Result Points by MadCatz\nGameShark v3-4 / Xploder v4\n282B24E6 0C965526\n\nSingle Play Codes: Max: Result Points by MadCatz\nGameShark v3-4 / Xploder v4\n2411397E B7B4494E\n\nPlain code (your pnach):\n[Single Play Codes\\Max Result Points] 2031FB60 0001869F\n[Single Play Codes: Max: Result Points] 2031F1E0 0001869F\n\nWORKS AS WRITTEN on your disc. Written for your disc: the points word 0x0031FB60. The colon form (2031F1E0) is the original release's address, 0x980 lower, the same word.\n\nSave data: Yes: the points are saved.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "mc_freeze_escape_time_l2"
+name = "Single Play Codes: Press And Hold L2 To Freeze Escape Time"
+description = "While you hold L2 (and nothing else), the game's event timers stop counting down.\n\nYour code:\nPress And Hold L2 To Freeze Escape Time by MadCatz\nGameShark v3-4 / Xploder v4\n7605C440 00000000\n D831B278 0CA5CB3E\n 28722B73 6F497A65\n\nAlso in your list as:\nInfinite Press And Hold L2 To Freeze Escape Time by MadCatz\nGameShark v3-4 / Xploder v4\nD831B278 0CA5CB3E\n 28722B73 6F497A65\n\nPlain code (your pnach):\n[Single Play Codes\\Infinite Press And Hold L2 To Freeze Escape Time] D02B081C 0000FEFF / 2068C77C 24630000\n\nADAPTED TO YOUR DISC. The joker (pad halfword 0x002B081C == FEFF) is your disc's pad: probe base_a read FEFF there while L2 was held. The write, 2068C77C 24630000, keeps the original release's address: on your disc 0x0068C77C is addu v1,v1,a0 in the online event-script interpreter, which never runs offline (trace t1). The code's addiu v1,v1,0 replaces the timer countdown addiu v1,v1,-1, which is at 0x0068C7DC on your disc (+0x60, the move of this function: the Code Master Infinite Time guard 1821 is at 0x0068C71C there and 0x0068C77C here). Probe g_timer_mc: with that write the timers at 0x004BAD8A/0x004BAD8E stop (0x0544, 0x0D78) instead of counting down. Released, the original instruction is put back (the name says hold).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "mc_ultimate_ammo_code"
+name = "Single Play Codes: Ultimate Ammo Code (does nothing on your disc)"
+description = "Nothing.\n\nYour code:\nUltimate Ammo Code by MadCatz\nGameShark v3-4 / Xploder v4\n76058E80 00000000\n 28415B15 80157A72\n\nAlso in your list as:\nUltimate Ammo Code by MadCatz\nGameShark v3-4 / Xploder v4\n28415B15 80157A72\n\nPlain code (your pnach):\n[Single Play Codes\\Ultimate Ammo Code] 205B1FDC A6020024\n\nNOT WORKING ON YOUR DISC. It writes sh v0,0x24(s0) (A6020024) to 0x005B1FDC, the original release's address of the round-count store, i.e. the instruction that is already there. On your disc 0x005B1FDC is move a0,s0, the argument of jal 0x005B2590: as written it would break that call. Moved by +0x30 it lands on 0x005B200C, which already holds exactly sh v0,0x24(s0): no change. No effect can be made from it.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "unlock_all_scenarios"
+name = "Single Play Codes: Unlock All Levels"
+description = "All five scenarios can be selected: the scenario bits of your save (0x00323BD8) are set.\n\nYour code:\nUnlock All Levels by MadCatz\nGameShark v3-4 / Xploder v4\n7602EFE0 00000000\n 282874F6 948C883E\n\nAlso in your list as:\nUnlock All Levels by MadCatz\nGameShark v3-4 / Xploder v4\n282874F6 948C883E\n\nSingle Play Codes: Unlock: Levels by MadCatz\nGameShark v3-4 / Xploder v4\n244FCF96 E90F08D7\n\nPlain code (your pnach):\n[Single Play Codes\\Unlock All Levels] 20323BD8 FFFFFFFF\n[Single Play Codes: Unlock: Levels] 20323258 FFFFFFFF\n\nWORKS AS WRITTEN on your disc. Written for your disc (0x00323BD8, the word the scenario select reads, demo.bin 0x00581C04). The code writes FFFFFFFF; the game uses bits 0-4 only, so only 0x0000001F is written (save safety), and only once the game has set your save data up. Probe u1 (cheat analysis): all five scenarios. The colon form (Single Play Codes: Unlock: Levels, 20323258) is the original release's address, 0x980 lower.\n\nSave data: Yes: kept when the game saves (a normal unlock); only the five scenario bits.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "mc_unlock_entire_collection"
+name = "Single Play Codes: Unlock Entire Collection"
+description = "Every collection item shows as owned: the owned bits of all collection items (0x00323C54, six words).\n\nYour code:\nUnlock Entire Collection by MadCatz\nGameShark v3-4 / Xploder v4\n7607E130 00000000\n 4828FAB1 0CC97A56\n 2E187D54 0CA57A65\n\nAlso in your list as:\nUnlock Entire Collection by MadCatz\nGameShark v3-4 / Xploder v4\n4828FAB1 0CC97A56\n 2E187D54 0CA57A65\n\nUnlock: Entire Collection by MadCatz\nGameShark v3-4 / Xploder v4\n244FCF96 E98F08E7\n244FCF96 E98F08D7\n244FCF96 E98F08F7\n244FCD96 E98F0847\n244FCD96 E98F0867\n244FCD96 E98F0857\n\nPlain code (your pnach):\n[Single Play Codes\\Unlock Entire Collection] 40323C54 00060001 / FFFFFFFF 00000000\n[Unlock: Entire Collection] 203232D4 FFFFFFFF / 203232D8 FFFFFFFF / 203232DC FFFFFFFF / 203232E0 FFFFFFFF / 203232E4 FFFFFFFF / 203232E8 FFFFFFFF\n\nWORKS AS WRITTEN on your disc. Written for your disc (the owned bitset demo.bin reads at 0x0057C560). The code writes FFFFFFFF; only the bits of items that exist are set. Probe m_coll_owned_mask: \"You already have this\" everywhere. The other form in your list, Unlock: Entire Collection (six 203232xx lines), is the original release's address, 0x980 lower: the same six words.\n\nSave data: Yes: kept when the game saves; the bits of real items only.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "mc_unlock_infinity_mode"
+name = "Single Play Codes: Unlock Infinity Mode"
+description = "Unlocks the Infinity mode: the extra-mode flags the collection's Infinity (item 0xB0) and its neighbour item 0xAF set (0x0031FB7F bits 0x01 and 0x04).\n\nYour code:\nUnlock Infinity Mode by MadCatz\nGameShark v3-4 / Xploder v4\n760876F0 00000000\n 282B2473 948C883E\n\nAlso in your list as:\nUnlock Infinity Mode by MadCatz\nGameShark v3-4 / Xploder v4\n282B2473 948C883E\n\nUnlock: Infinity Mode by MadCatz\nGameShark v3-4 / Xploder v4\n240F69D6 EB8F08F7\n\nPlain code (your pnach):\n[Single Play Codes\\Unlock Infinity Mode] 2031FB7C FFFFFFFF\n[Unlock: Infinity Mode] 2031F1FC FFFFFFFF\n\nWORKS AS WRITTEN on your disc. Written for your disc (0x0031FB7C, four flag bytes). The code writes FFFFFFFF into all four bytes; the game itself only ever sets 0x0031FB7C = 1 and bits 0x01 / 0x04 of 0x0031FB7F (demo.bin 0x0057C364..84), so only those two bits are set; 0x0031FB7D/7E are settings and are left alone. Probe m_char_masks: the character select offers PARTNER MODE: DEFAULT / LONE WOLF MODE (sheet_char.png). The other form, Unlock: Infinity Mode (2031F1FC), is the original release's address.\n\nSave data: Yes: kept when the game saves; two valid bits only.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "mc_virus_level_never_goes_up"
+name = "Single Play Codes: Virus Level Never Goes Up"
+description = "The virus gauge of every character stays at 0 (the gauge update stores 0).\n\nYour code:\nVirus Level Never Goes Up by MadCatz\nGameShark v3-4 / Xploder v4\n760EDA40 00000000\n 287C6AE5 F7A17A65\n\nAlso in your list as:\nVirus Level Never Goes Up by MadCatz\nGameShark v3-4 / Xploder v4\n287C6AE5 F7A17A65\n\nSingle Play Codes: Virus Level Never Goes Up by MadCatz\nGameShark v3-4 / Xploder v4\n2490A5E8 54B0D3DD\n\nPlain code (your pnach):\n[Single Play Codes\\Virus Level Never Goes Up] 20667DF8 34100000\n[Single Play Codes: Virus Level Never Goes Up] 20667DF8 34100000\n\nADAPTED TO YOUR DISC. Both forms write 34100000 (li s0,0) to 0x00667DF8, the original release's address: on your disc that is move a0,s1, the argument of a call into single.bin, so as written it would break it. +0x60 (the move of this function: the regular Don't Become A Zombie Over Time guard 0x9F8C is jal 0x00667E30 there, your disc has jal 0x00667E90 at 0x00667E54) gives 0x00667E58, move a2,s0 in the delay slot of that jal, which the code replaces so the store after it writes 0. Probe g_combo: all three gauges stay 0 through the zombie phase (without it: 11330 / 6060 / 8655).\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "mc_infinite_escape_time"
+name = "Single Play Codes: Single Play Codes: Infinite: Escape Time"
+description = "The game's event timers (the escape countdowns) never count down.\n\nYour code:\nSingle Play Codes: Infinite: Escape Time by MadCatz\nGameShark v3-4 / Xploder v4\n249391C8 3230C7B9\n\nPlain code (your pnach):\n[Single Play Codes: Infinite: Escape Time] 2068C77C 24630000\n\nADAPTED TO YOUR DISC. The original release's 0x0068C77C (the timer countdown addiu v1,v1,-1 there) is 0x0068C7DC on your disc (+0x60). Probe g_timer_mc: the timers stop.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_collection_opened"
+name = "Speed Codes: Collection Opened"
+description = "Every collection item can be bought while this is on (the game's \"is it available\" check always says yes).\n\nYour code:\nCollection Opened by Codejunkies\nARMax\n5G3J-XAYZ-MR9B7\nGXBK-FFM7-BXN82\nDGJR-VV1B-581QX\n5QYP-DUD4-ZG37F\n6D2J-QPQK-8NHT4\nWTGY-9DN3-W93UW\n\nPlain code (your pnach):\n[Speed Codes\\Collection Opened] 20239394 3C010058 / 20239398 9424C3E8 / 2023939C 2402100A / 202393A0 14820002 / 202393A8 AC20C3E8\n\nADAPTED TO YOUR DISC. Installed code (decoded, = the pnach lines): if the halfword at 0x0057C3E8 is 0x100A, store 0 there, i.e. replace the movz v0,zero,v1 (0003100A) that ends demo.bin's \"available\" check. Your disc has that function 0x130 higher: 0x0057C518 (it reads the available bitset 0x00323BF4). Probe m_coll_opened: every item priced, the save bits untouched (sheet_coll_opened_owned.png, upper row).\n\nSave data: No: it changes the menu's check, nothing is written to the save.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_fast_hero"
+name = "Speed Codes: Fast Hero"
+description = "Player 1 moves faster: two speed factors (0x004A5D20 and 0x004A67F0, normally 1.0) are set to 1.5.\n\nYour code:\nFast Hero by Codejunkies\nARMax\nP024-P9W1-H1BNN\n6BF8-NURK-4VHNG\nPHCB-H35Y-U8EAD\n1VV2-PZHV-4762D\nP8GZ-NGDE-MMETF\n\nPlain code (your pnach):\n[Speed Codes\\Fast Hero] 202393AC 3C02004A / 202393B0 3C013FC0 / 202393B4 AC415CA0 / 202393B8 AC416770\n\nADAPTED TO YOUR DISC. Installed code: sw 1.5 to 0x004A5CA0 and 0x004A6770, +0x80 (the Player 1 block) = 0x004A5D20 and 0x004A67F0. Probe g_speed: 150 units in 50 vblanks instead of 62 (the two factors multiply).\n\nSave data: No.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_giant_hero"
+name = "Speed Codes: Giant Hero"
+description = "Player 1 is drawn 1.5 times as big (the three scale factors 0x004A5CE4/E8/EC, normally 1.05).\n\nYour code:\nGiant Hero by Codejunkies\nARMax\nZA67-7W6M-WR0HZ\nKJGW-M77T-ECJ3E\nMPM9-5MYF-71GBT\nPV01-KXV7-WMRTX\n4N2G-TU16-JEHF0\nFW8V-PVFB-Y17G7\n\nPlain code (your pnach):\n[Speed Codes\\Giant Hero] 202393CC 3C013FC0 / 202393D0 3C02004A / 202393D4 AC415C6C / 202393D8 AC415C68 / 202393DC AC415C64\n\nADAPTED TO YOUR DISC. Installed code: sw 1.5 to 0x004A5C64/68/6C, +0x80 = 0x004A5CE4/E8/EC. Probe g_giant_slots: a bigger Kevin (sheet_giant_slots.png, top right).\n\nSave data: No.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_infinite_ammo"
+name = "Speed Codes: Infinite Ammo"
+description = "Firing does not use up rounds (the round-count store is removed).\n\nYour code:\nInfinite Ammo by Codejunkies\nARMax\nY96Y-9CD0-4F3MC\nV8HZ-Y314-8BNU5\nJPWA-BVVE-65A4K\n\nPlain code (your pnach):\n[Speed Codes\\Infinite Ammo] 20239368 3C01005B / 2023936C AC201FDC\n\nADAPTED TO YOUR DISC. Installed code: sw zero to 0x005B1FDC (the count store sh v0,0x24(s0) of the original release), +0x30 = 0x005B200C on your disc, the same site as the Code Master Infinite Ammo. Probe ammo_inf (cheat analysis): 7 stays 7 over 12 shots.\n\nSave data: No.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_infinite_time"
+name = "Speed Codes: Infinite Time"
+description = "The game's event timers never count down (their store is removed).\n\nYour code:\nInfinite Time by Codejunkies\nARMax\nG02K-YQDA-VAF0J\n0CVH-K2UP-ZZGTV\nM92N-EXWQ-MRA24\n\nPlain code (your pnach):\n[Speed Codes\\Infinite Time] 202393E0 3C010069 / 202393E4 AC20C780\n\nADAPTED TO YOUR DISC. Installed code: sw zero to 0x0068C780 (original release), +0x60 = 0x0068C7E0 sh v1,0xa8(a0), the store of the timer countdown (it runs every frame in single play: trace t1). Probe g_timers: the timers at 0x004BAD8A/0x004BAD8E stop at 0x0544/0x0D78.\n\nSave data: No.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_max_collection_pts"
+name = "Speed Codes: Max Collection Pts"
+description = "The collection points are set to 3,276,800 (the code stores 0x00320000).\n\nYour code:\nMax Collection Pts by Codejunkies\nARMax\nH51R-KQY0-JMPWF\nZEND-WTYF-E8C69\nCEWX-U8R7-TC2DR\n\nPlain code (your pnach):\n[Speed Codes\\Max Collection Pts] 20239378 3C010032 / 2023937C AC21F1E0\n\nADAPTED TO YOUR DISC. Installed code: lui at,0x0032 / sw at,-0xE20(at) = 0x00320000 into 0x0031F1E0, +0x980 = the points word 0x0031FB60.\n\nSave data: Yes: the points are saved.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_scenarii_opened"
+name = "Speed Codes: Scenarii Opened"
+description = "All five scenarios can be selected while this is on (the scenario select skips its lock check).\n\nYour code:\nScenarii Opened by Codejunkies\nARMax\n13RV-ZFAX-4BRDZ\n6M8U-HG92-0G144\n8ZG4-0YNJ-6Q7A5\n\nPlain code (your pnach):\n[Speed Codes\\Scenarii Opened] 202393C4 3C010058 / 202393C8 AC201AE0\n\nADAPTED TO YOUR DISC. Installed code: sw zero to 0x00581AE0 (original release). Your disc has the scenario select's lock check, beqz v0 after lw v0,0x4078(v0) (the scenario bits), at 0x00581C14 (+0x134, next to the +0x130 of Collection Opened). Probe m_scen_opened: all five scenarios in the select while the save word stays 0x00000001 (sheet_scen_opened.png).\n\nSave data: No: nothing is written to the save.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_super_fast_hero"
+name = "Speed Codes: Super Fast Hero"
+description = "Player 1 moves much faster: the two speed factors are set to 2.0.\n\nYour code:\nSuper Fast Hero by Codejunkies\nARMax\nCA3F-B38K-9XG4P\n6BF8-NURK-4VHNG\n2QGX-9ZR6-RMTNB\n1VV2-PZHV-4762D\nP8GZ-NGDE-MMETF\n\nPlain code (your pnach):\n[Speed Codes\\Super Fast Hero] 202393AC 3C02004A / 202393B0 3C014000 / 202393B4 AC415CA0 / 202393B8 AC416770\n\nADAPTED TO YOUR DISC. As Fast Hero, with 2.0 (lui at,0x4000).\n\nSave data: No.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_zero_virus_gauge"
+name = "Speed Codes: Zero Virus Gauge"
+description = "Player 1's virus gauge is held at 0.\n\nYour code:\nZero Virus Gauge by Codejunkies\nARMax\nAQHY-11EK-J38W3\nJDA8-XPCW-1N00J\n4BUB-YBVG-VXX06\n\nPlain code (your pnach):\n[Speed Codes\\Zero Virus Gauge] 20239370 3C01004A / 20239374 AC20675C\n\nADAPTED TO YOUR DISC. Installed code: sw zero to 0x004A675C, +0x80 = 0x004A67DC (Player 1 block + 0xBAC, where game.bin stores the gauge). Probe gauge_zero (cheat analysis): 0.00 %.\n\nSave data: No.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cj_zombies_dont_move"
+name = "Speed Codes: Zombies Don't Move"
+description = "Enemies stay where they are (they still attack you when you are next to them).\n\nYour code:\nZombies Don't Move by Codejunkies\nARMax\nFYRF-G5GX-0PZHH\nF5NU-185U-2QAR9\n205Q-J3Z6-16NX9\n\nPlain code (your pnach):\n[Speed Codes\\Zombies Don't Move] 202393BC 3C010069 / 202393C0 AC2064B4\n\nADAPTED TO YOUR DISC. Installed code: sw zero to 0x006964B4 (original release). +0x60 gives 0x00696514 lbu v0,0xc82(s0) in the enemy update: without it v0 keeps 1 and the call to the movement routine (jal 0x0065E3A0) is skipped. Probe g_zombies: the three zombies' positions stay fixed from 10300 on (without it they walk); Kevin still got bitten where he walked past them.\n\nSave data: No.\n\nNeeds the Action Replay MAX master code, (M) Must Be On by Codejunkies."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_all_costumes"
+name = "Unlock Costume Codes: All Costumes"
+description = "Every costume the game has can be chosen: Type B for all eight characters, Type C for Alyssa, Yoko and Cindy.\n\nYour code:\nAll Costumes by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n991F646C BF848073\n29375A95 4F02AB40\n\nPlain code (your pnach):\n[Unlock Costume Codes\\All Costumes] 2031F1E4 FFFFFFFF / 2031F1E8 FFFFFFFF\n\nADAPTED TO YOUR DISC. Regular 0x0031F1E4/E8 + 0x980 = 0x0031FB64/68, one byte per character (bit 0 = Type B, bit 1 = Type C; demo.bin's character select, 0x00584F44). The code writes FFFFFFFF; only the bits the game itself sets (its costume table, collection items No. 001-011) are set. Probe m_char_masks: \"Select A Type\"; probe m_costume_names: the collection lists Type B for all eight and a second new costume for Alyssa, Yoko and Cindy only.\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_alyssa_all"
+name = "Unlock Costume Codes: Alyssa-All Types (code not decodable: substitute)"
+description = "Unlocks Alyssa's costumes: Type B and Type C. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nAlyssa-All Types by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n5D79D924 239DF34A\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Alyssa's costume byte is 0x0031FB69 (0x0031FB64 + character 5; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_alyssa_b"
+name = "Unlock Costume Codes: Alyssa-Type B (code not decodable: substitute)"
+description = "Unlocks Alyssa's Type B costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nAlyssa-Type B by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n486C28C8 62C63EFB\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Alyssa's costume byte is 0x0031FB69 (0x0031FB64 + character 5; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_alyssa_c"
+name = "Unlock Costume Codes: Alyssa-Type C (code not decodable: substitute)"
+description = "Unlocks Alyssa's Type C costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nAlyssa-Type C by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n589A88D3 5CCF6D25\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Alyssa's costume byte is 0x0031FB69 (0x0031FB64 + character 5; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_cindy_all"
+name = "Unlock Costume Codes: Cindy-All Types (code not decodable: substitute)"
+description = "Unlocks Cindy's costumes: Type B and Type C. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nCindy-All Types by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n5E73C61B D3A3AFEC\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Cindy's costume byte is 0x0031FB6B (0x0031FB64 + character 7; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_cindy_b"
+name = "Unlock Costume Codes: Cindy-Type B (code not decodable: substitute)"
+description = "Unlocks Cindy's Type B costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nCindy-Type B by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nD8B13445 C1B39945\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Cindy's costume byte is 0x0031FB6B (0x0031FB64 + character 7; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_cindy_c"
+name = "Unlock Costume Codes: Cindy-Type C (code not decodable: substitute)"
+description = "Unlocks Cindy's Type C costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nCindy-Type C by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n458BBBD5 9622C72D\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Cindy's costume byte is 0x0031FB6B (0x0031FB64 + character 7; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_david_all"
+name = "Unlock Costume Codes: David-All Types (code not decodable: substitute)"
+description = "Unlocks David's costumes: Type B (the game has no Type C for David). This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nDavid-All Types by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nFDD31332 3072A9EB\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: David's costume byte is 0x0031FB68 (0x0031FB64 + character 4; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_david_b"
+name = "Unlock Costume Codes: David-Type B (code not decodable: substitute)"
+description = "Unlocks David's Type B costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nDavid-Type B by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nDDE89FB7 F171EE96\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: David's costume byte is 0x0031FB68 (0x0031FB64 + character 4; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_david_c"
+name = "Unlock Costume Codes: David-Type C (does nothing on your disc)"
+description = "Nothing.\n\nYour code:\nDavid-Type C by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n4C9023E7 4F1DDBFF\n\nNOT WORKING ON YOUR DISC. Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. Your disc's game has no Type C costume for David: its costume table (collection items No. 001-011) unlocks Type C only for Alyssa, Yoko and Cindy, and nothing in the game sets that bit for David. Setting it would put a value into your save the game never writes.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_george_all"
+name = "Unlock Costume Codes: George-All Types (code not decodable: substitute)"
+description = "Unlocks George's costumes: Type B (the game has no Type C for George). This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nGeorge-All Types by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n8E3409CF CF8D137D\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: George's costume byte is 0x0031FB67 (0x0031FB64 + character 3; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_george_b"
+name = "Unlock Costume Codes: George-Type B (code not decodable: substitute)"
+description = "Unlocks George's Type B costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nGeorge-Type B by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n627B74D9 BFB28FC3\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: George's costume byte is 0x0031FB67 (0x0031FB64 + character 3; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_george_c"
+name = "Unlock Costume Codes: George-Type C (does nothing on your disc)"
+description = "Nothing.\n\nYour code:\nGeorge-Type C by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n82B41A88 2A674B2E\n\nNOT WORKING ON YOUR DISC. Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. Your disc's game has no Type C costume for George: its costume table (collection items No. 001-011) unlocks Type C only for Alyssa, Yoko and Cindy, and nothing in the game sets that bit for George. Setting it would put a value into your save the game never writes.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_jim_all"
+name = "Unlock Costume Codes: Jim-All Types (code not decodable: substitute)"
+description = "Unlocks Jim's costumes: Type B (the game has no Type C for Jim). This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nJim-All Types by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n9D2918A1 C95AED7A\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Jim's costume byte is 0x0031FB66 (0x0031FB64 + character 2; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_jim_b"
+name = "Unlock Costume Codes: Jim-Type B (code not decodable: substitute)"
+description = "Unlocks Jim's Type B costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nJim-Type B by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n9433B34E DD38DD56\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Jim's costume byte is 0x0031FB66 (0x0031FB64 + character 2; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_jim_c"
+name = "Unlock Costume Codes: Jim-Type C (does nothing on your disc)"
+description = "Nothing.\n\nYour code:\nJim-Type C by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nE1A81B88 EB6C3CAC\n\nNOT WORKING ON YOUR DISC. Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. Your disc's game has no Type C costume for Jim: its costume table (collection items No. 001-011) unlocks Type C only for Alyssa, Yoko and Cindy, and nothing in the game sets that bit for Jim. Setting it would put a value into your save the game never writes.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_kevin_all"
+name = "Unlock Costume Codes: Kevin-All Types (code not decodable: substitute)"
+description = "Unlocks Kevin's costumes: Type B (the game has no Type C for Kevin). This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nKevin-All Types by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nC889105F 63EE4C24\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Kevin's costume byte is 0x0031FB64 (0x0031FB64 + character 0; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_kevin_b"
+name = "Unlock Costume Codes: Kevin-Type B (code not decodable: substitute)"
+description = "Unlocks Kevin's Type B costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nKevin-Type B by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nB19D7820 0E18BBD3\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Kevin's costume byte is 0x0031FB64 (0x0031FB64 + character 0; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_kevin_c"
+name = "Unlock Costume Codes: Kevin-Type C (does nothing on your disc)"
+description = "Nothing.\n\nYour code:\nKevin-Type C by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nAC361875 0D1B3031\n\nNOT WORKING ON YOUR DISC. Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. Your disc's game has no Type C costume for Kevin: its costume table (collection items No. 001-011) unlocks Type C only for Alyssa, Yoko and Cindy, and nothing in the game sets that bit for Kevin. Setting it would put a value into your save the game never writes.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_mark_all"
+name = "Unlock Costume Codes: Mark-All Types (code not decodable: substitute)"
+description = "Unlocks Mark's costumes: Type B (the game has no Type C for Mark). This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nMark-All Types by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nA7162FAF 4E4785F1\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Mark's costume byte is 0x0031FB65 (0x0031FB64 + character 1; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_mark_b"
+name = "Unlock Costume Codes: Mark-Type B (code not decodable: substitute)"
+description = "Unlocks Mark's Type B costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nMark-Type B by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nBF3B3938 9C86098F\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Mark's costume byte is 0x0031FB65 (0x0031FB64 + character 1; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_mark_c"
+name = "Unlock Costume Codes: Mark-Type C (does nothing on your disc)"
+description = "Nothing.\n\nYour code:\nMark-Type C by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n92FB24A8 98F24546\n\nNOT WORKING ON YOUR DISC. Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. Your disc's game has no Type C costume for Mark: its costume table (collection items No. 001-011) unlocks Type C only for Alyssa, Yoko and Cindy, and nothing in the game sets that bit for Mark. Setting it would put a value into your save the game never writes.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_yoko_all"
+name = "Unlock Costume Codes: Yoko-All Types (code not decodable: substitute)"
+description = "Unlocks Yoko's costumes: Type B and Type C. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nYoko-All Types by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nE4303768 730A84F8\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Yoko's costume byte is 0x0031FB6A (0x0031FB64 + character 6; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_yoko_b"
+name = "Unlock Costume Codes: Yoko-Type B (code not decodable: substitute)"
+description = "Unlocks Yoko's Type B costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nYoko-Type B by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nD6F2B36A C93DC9F9\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your code for it is CodeBreaker v7 encrypted and could not be decoded here (the encryption needs seed tables that were not available), and your pnach has no plain form of it. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Yoko's costume byte is 0x0031FB6A (0x0031FB64 + character 6; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_costume_yoko_c"
+name = "Unlock Costume Codes: Yoko-Type C (code not decodable: substitute)"
+description = "Unlocks Yoko's Type C costume. This is a substitute taken from the cheat's name, not your code: your code could not be decoded, so what it writes is not known.\n\nYour code:\nYoko-Type C by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v1-6 / Xploder v1-3\n2B5EDF28 68BEFB9F\n\nPlain code (your pnach):\n[Unlock Costume Codes\\Yoko-Type C] 21FDD36C 68BEFB9F\n\nNOT DECODABLE, SUBSTITUTE FROM THE NAME (not a proven equivalent). Your list gives it as a CodeBreaker v1-6 code, and your pnach's plain form 21FDD36C 68BEFB9F (a 32-bit write into the stack area at 0x01FDD36C) is what decoding it as v1-6 gives: garbage, so it is most likely a CodeBreaker v7 code like its neighbours and was not decoded. So what your code writes on your disc is not known and no equivalent of it can be proven (it is not \"adapted to your disc\"). The mod does what the cheat's name says instead, with only the bits the game itself sets: Yoko's costume byte is 0x0031FB6A (0x0031FB64 + character 6; bit 0 = Type B, bit 1 = Type C, read by the character select at demo.bin 0x00584F44 and set by the collection purchase at 0x0057C1C4, the same byte All Costumes writes, +0x980 from the original release). Probe m_char_alyssa_c: with only Alyssa's Type C bit set, only Alyssa offers a costume type at the character select, whose order (Kevin, Mark, Jim, George, David, Alyssa, Yoko, Cindy) is the byte order (sheet_char_alyssa_c.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "one_hit_kills"
+name = "Other Codes: 1-Hit Deaths (Enemies)"
+description = "Any hit kills an enemy.\n\nYour code:\n1-Hit Deaths (Enemies) by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nF2909891 A90BE8D3\n937318D5 2EA40919\n\nPlain code (your pnach):\n[1-Hit Deaths (Enemies)] D0640794 0000882D / 206407A0 A6620138\n\nADAPTED TO YOUR DISC. Guard D0640794 882D and write 206407A0 +0x60: guard 0x006407F4 move s1,a2 (0x00C0882D, the same instruction), 0x00640800 beq v1,v0 -> sh v0,0x138(s3). Probe one_hit (cheat analysis): hit enemies die on the first hit.\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_animation_picker"
+name = "Other Codes: Animation Sequence Picker Player 1"
+description = "Player 1's animation byte (0x004A67CB) is held at the value below. Author: \"Use a joker with it. Different values made different things happen. With Cindy I made her throw nothing, limp, collapse, walk backwards, and whatever else. Mostly useless.\"\n\nYour code:\nAnimation Sequence Picker Player 1 by bungholio\nGameShark v3-4 / Xploder v4\n004A67CB 000000??\n\nPlain code (your pnach):\n[Animation Sequence Picker Player 1] 004A67CB 00000000\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xB9B, your disc's own field (game.bin: 72 reads, 93 writes, e.g. lbu v0,0xb9b(s0)). Not observed in a probe.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_animation_picker_value"
+name = "Animation Sequence Picker Player 1: value"
+description = "The ?? value (0-255) of Animation Sequence Picker Player 1."
+type = "Number"
+min = 0
+max = 255
+step = 1
+precision = 0
+percent = false
+default = 0
+
+[[manifest.config_options]]
+id = "cb_zombie_after_death"
+name = "Other Codes: Become A Zombie After Death (Offline Mode)"
+description = "When you die offline you turn into a playable zombie instead of \"YOU DIED\".\n\nYour code:\nBecome A Zombie After Death (Offline Mode) by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n06255221 C712B3D7\nD15CCABB 6CA101C2\n\nPlain code (your pnach):\n[Become A Zombie After Death (Offline Mode)] D065FCB5 0000202D / 1065FCDA 00001000\n\nADAPTED TO YOUR DISC. D065FCB5 202D / 1065FCDA 1000: the guard address is odd (a slip); +0x60 and aligned it is 0x0065FD14 move a0,s1 (0x0220202D). The 16-bit write 0x1000 at 0x0065FD3A (+0x60) makes the bne v0,v1 at 0x0065FD38 always taken. Probe zombie_after_death (cheat analysis): the game continues with the zombie.\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_no_zombie_over_time"
+name = "Other Codes: Don't Become A Zombie Over Time"
+description = "The virus gauge no longer rises with time (all characters).\n\nYour code:\nDon't Become A Zombie Over Time by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n8486A84D 91EF19D1\n44DDC1E8 5F46D8DE\n\nPlain code (your pnach):\n[Don't Become A Zombie Over Time] D0667DF4 00009F8C / 20667DFC 00000000\n\nADAPTED TO YOUR DISC. D0667DF4 9F8C / 20667DFC 0, +0x60: guard 0x00667E54 jal 0x00667E90 (9FA4: the jal target moved by 0x60 too), 0x00667E5C sw s0,0xbac(s1) -> nop. Probe no_zombie (cheat analysis): the gauges stay 0.\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_no_zombie_when_bitten"
+name = "Other Codes: Don't Become A Zombie When Bitten"
+description = "Bites no longer raise the virus gauge (all characters).\n\nYour code:\nDon't Become A Zombie When Bitten by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nBAF34529 D3F0448F\n5910B0E3 5F9B6B78\n\nPlain code (your pnach):\n[Don't Become A Zombie When Bitten] D06600FC 00009FCC / 20660100 00000000\n\nADAPTED TO YOUR DISC. D06600FC 9FCC / 20660100 0, +0x60: guard 0x0066015C jal 0x00667F90 (9FE4), 0x00660160 sw v0,0xbac(s1) -> nop. Probe no_zombie (cheat analysis).\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_enemies_cant_touch"
+name = "Other Codes: Enemies Can't Touch Player 1"
+description = "Enemies cannot hit or grab Player 1 (byte 0x004A67D2 = 0x20).\n\nYour code:\nEnemies Can't Touch Player 1 by bungholio\nGameShark v3-4 / Xploder v4\n004A67D2 00000020\n\nPlain code (your pnach):\n[Enemies Can't Touch Player 1] 004A67D2 00000020\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xBA2 (a byte of the flags word game.bin reads with lw 0xba0). Probe g_touch: through the whole zombie phase Kevin kept 2300 HP and his gauge rose only with time (3030); without it he drops to 1055 HP and the gauge reaches 11330.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_enemies_dont_damage"
+name = "Other Codes: Enemies Don't Damage You With Attacks"
+description = "Enemy attacks do no HP damage (player and partners); grabs and bites still infect.\n\nYour code:\nEnemies Don't Damage You With Attacks by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nB7F46F6F 71C1792B\n6CB29240 785A3598\n\nPlain code (your pnach):\n[Enemies Don't Damage You With Attacks] D0660AAC 0000802D / 20660AB8 00000000\n\nADAPTED TO YOUR DISC. D0660AAC 802D / 20660AB8 0, +0x60: guard 0x00660B0C move s0,a0 (0x0080802D), 0x00660B18 beqz v1 -> nop. Probe no_damage (cheat analysis): all HP unchanged through the zombie phase.\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_enemies_dont_notice"
+name = "Other Codes: Enemies Don't Notice Player 1 (Because you are dead) (L2+UP=ON, L2+DOWN=OFF)"
+description = "L2+Up (exactly) sets byte 0x004A67D1 to 1, L2+Down sets it to 0, as written. Author: \"WARNING! THIS IS BUGGY\": zombies ignore you, other players don't; you cannot open the start menu or fire while it is set; you die if a movie plays.\n\nYour code:\nEnemies Don't Notice Player 1 (Because you are dead) (L2+UP=ON, L2+DOWN=OFF) by bungholio\nGameShark v3-4 / Xploder v4\nD02B081C 0000FEEF\n004A67D1 00000001\nD02B081C 0000FEBF\n004A67D1 00000000\n\nPlain code (your pnach):\n[Enemies Don't Notice Player 1 (Because you are dead) (L2+UP=ON, L2+DOWN=OFF)] D02B081C 0000FEEF / 004A67D1 00000001 / D02B081C 0000FEBF / 004A67D1 00000000\n\nWORKS AS WRITTEN on your disc. The joker address 0x002B081C is your disc's pad: probe base_a read FEEF with L2+Up and FEBF with L2+Down there. 0x004A67D1 is Player 1 block + 0xBA1 (game.bin: lbu 0xba1, 142 reads). The effect was not observed in a probe.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_extra_ammo"
+name = "Other Codes: Extra Ammo"
+description = "Each shot adds a round instead of using one.\n\nYour code:\nExtra Ammo by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n8AF7FE98 3A641372\n8C3A55AC F2DDA469\n\nPlain code (your pnach):\n[Extra Ammo] D05B1FC8 00001E3C / 105B1FD8 00000001\n\nADAPTED TO YOUR DISC. D05B1FC8 1E3C / 105B1FD8 0001, +0x30: guard 0x005B1FF8 dsll32 v1,s2,0x18 (0x1E3C, the same), 16-bit 0x0001 into 0x005B2008 addiu v0,a0,-1 -> addiu v0,a0,1. Probe ammo_extra (cheat analysis): 7 -> 19 over 12 shots.\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_have_all_files"
+name = "Other Codes: Have All Files"
+description = "All 16 files of the current scenario are yours (16-bit 0x004B9C80 = FFFF). Author: they count as completed events at the end.\n\nYour code:\nHave All Files by bungholio\nGameShark v3-4 / Xploder v4\n104B9C80 0000FFFF\n\nPlain code (your pnach):\n[Have All Files] 104B9C80 0000FFFF\n\nWORKS AS WRITTEN on your disc. Your disc's files word: game.bin and submain address 0x004B9C80 (addiu 0x9C80 at 0x00570984, 0x0068E3E0, 0x0037EC20 ...); 0 in J's Bar in probe base_a. The effect was not observed in a probe.\n\nSave data: Indirect: they count as completed events in the results.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "infinite_ammo"
+name = "Other Codes: Infinite Ammo"
+description = "Firing does not use up rounds.\n\nYour code:\nInfinite Ammo by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n8AF7FE98 3A641372\n4D148401 3BF12FCB\n\nPlain code (your pnach):\n[Infinite Ammo] D05B1FC8 00001E3C / 205B1FDC 00000000\n\nADAPTED TO YOUR DISC. D05B1FC8 1E3C / 205B1FDC 0, +0x30: guard 0x005B1FF8 (0x1E3C), 0x005B200C sh v0,0x24(s0) -> nop. Probes ammo_inf and ammo_inf_off (cheat analysis).\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_infinite_health"
+name = "Other Codes: Infinite Health"
+description = "Every character's HP is set to 9999 while its death check runs (players and partners).\n\nYour code:\nInfinite Health by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nF8BD46AB 776D98DB\nA1E1B1CE 6CC6BCEC\n98B244E0 AA9AC5C0\n\nPlain code (your pnach):\n[Infinite Health] E0023881 00660794 / 206607A0 2403270F / 206607A8 AE030544\n\nADAPTED TO YOUR DISC. E0023881 00660794 / 206607A0 2403270F / 206607A8 AE030544, +0x60: 0x00660800 lh v1,0x544(s0) -> li v1,9999; 0x00660808 nop -> the store. The guard: 0x006607F4 holds lh v1,0x4200(at) on your disc (the original release has the same load of a save word 0x980 lower, 0x3880); the published 0x3881 is one too high, so the adapted guard is 0x4200. The code's own store is 32-bit (sw): it also sets max HP to 0, and after turning it off the next hit leaves HP 0 (probe health_fix_off). \"On (16-bit store)\" writes HP only (probe health_sh_off: safe on and off). Probe health_fix: HP back to 9999 after every hit.\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On (16-bit store: HP 9999, max HP kept)", "On as written (32-bit store: HP 9999, max HP 0)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "infinite_items"
+name = "Other Codes: Infinite Item Usage"
+description = "Using a consumable item does not use it up (everyone).\n\nYour code:\nInfinite Item Usage by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nA47EF070 D1588402\nDEE22587 9CB5A170\n96260F9F 5F27A6B9\n3CA466CC 480EDCE3\n\nPlain code (your pnach):\n[Infinite Item Usage] E0031E3D 005B2148 / 205B215C 00000000 / 205B2170 00000000 / 205B5184 00000000\n\nADAPTED TO YOUR DISC. E0031E3D 005B2148 / 205B215C, 205B2170, 205B5184 = 0, +0x30: guard 0x005B2178 dsll32 v1,s2,0x18 = 0x1E3C (the published 0x1E3D is one too high), 0x005B218C sh v0,0x24(s0), 0x005B21A0 bne v0,v1, 0x005B51B4 move v0,zero -> nop. Probe items_fix (cheat analysis): Cindy's herb stays 1.\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_infinite_time"
+name = "Other Codes: Infinite Time (does nothing on your disc)"
+description = "Nothing in single play.\n\nYour code:\nInfinite Time by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n93AE3283 C5A30544\nEEBC1BDA 240C9802\n\nPlain code (your pnach):\n[Infinite Time] D068C71C 00001821 / 2068C724 00000000\n\nNOT WORKING ON YOUR DISC. D068C71C 1821 / 2068C724 0, +0x60: the guard matches your disc (0x0068C77C addu v1,v1,a0), and the write removes 0x0068C784 sw v1,(s3), the program-counter store of the online event-script interpreter. Offline, the game runs another interpreter: that store never ran in 7,300 vblanks of single play (trace t1). Online play is not available, so there is nothing to apply (patching it would only stop online scripts).\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "mc_reset_escape_time_l2"
+name = "Other Codes: Infinite: Press L2 To Reset Escape Time"
+description = "While you hold L2 (and nothing else), the event timers stop counting down.\n\nYour code:\nInfinite: Press L2 To Reset Escape Time by MadCatz\nGameShark v3-4 / Xploder v4\nD4409A76 BD3CDAF2\n249391C8 3230C7B9\n\nPlain code (your pnach):\n[Infinite: Press L2 To Reset Escape Time] D02AFE1C 0000FEFF / 2068C77C 24630000\n\nADAPTED TO YOUR DISC. D02AFE1C FEFF / 2068C77C 24630000 are both the original release's addresses. The pad: 0x002AFE1C + 0xA00 = 0x002B081C, your disc's pad halfword (the joker address bungholio's codes and MadCatz' other code use; probe base_a: FEFF with L2). The write: +0x60 = 0x0068C7DC, the timer countdown (probe g_timer_mc). Released, the original instruction is put back.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_max_infinite_ammo"
+name = "Other Codes: Max Infinite Ammo"
+description = "The loaded rounds drop to 1 and then stay at 1 (not 99).\n\nYour code:\nMax Infinite Ammo by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n8AF7FE98 3A641372\nB71356A4 D04823E8\n\nPlain code (your pnach):\n[Max Infinite Ammo] D05B1FC8 00001E3C / 205B1FD8 24030063\n\nADAPTED TO YOUR DISC. D05B1FC8 1E3C / 205B1FD8 24030063, +0x30: guard 0x005B1FF8, 0x005B2008 addiu v0,a0,-1 -> li v1,99. The store after it writes v0, which is 1 there, so the count is held at 1: the code's own effect (the same code on the original release). Probe ammo_max (cheat analysis).\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_number_of_players"
+name = "Other Codes: Number Of Players Present"
+description = "The number of players (byte 0x004BAEA0). Author: \"Set it to 1 for 1 player, 2 for 2 players, and so on. I doubt 5 works though ... It's basically like controlling 2 of yourself.\"\n\nYour code:\nNumber Of Players Present by bungholio\nGameShark v3-4 / Xploder v4\n004BAEA0 0000000?\n\nPlain code (your pnach):\n[Number Of Players Present] 004BAEA0 00000001\n\nWORKS AS WRITTEN on your disc. Your disc's player count: 3 in single play (probe base_a), read by 100+ places in game.bin (lw/lb -0x5160 from 0x004C0000). The effect was not observed in a probe.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "1 player", "2 players", "3 players (the value in single play)", "4 players" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_l1_select_infection"
+name = "Other Codes: P1 Press L1+Select For Infection 100%"
+description = "L1+Select (exactly) makes the gauge update store a huge value: the gauge goes to 100 % and the character dies (\"YOU DIED\", unless Become A Zombie After Death is on). With nothing pressed the original instruction is put back, as written. It acts on every character whose gauge updates meanwhile.\n\nYour code:\nP1 Press L1+Select For Infection 100% by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n624F22E0 C7C01F89\nEC2CF47D 4A69EACE\nF09D797D 1988457D\nE312419A DA859F0F\n\nPlain code (your pnach):\n[P1 Press L1+Select For Infection 100%] D02AFE9C 0000FBFE / 20667DC8 24900000 / D02AFE9C 0000FFFF / 20667DC8 4410B800\n\nADAPTED TO YOUR DISC. The pad: 0x002AFE9C + 0xA00 = 0x002B089C, your disc's second copy of the pad (probe base_a: FBFE there with L1+Select). The write: 0x00667DC8 + 0x60 = 0x00667E28, which holds mfc1 s0,$f23 (4410B800), exactly the code's own restore value. Probe g_l1select: Kevin's gauge went to 0x24EA0 (100 %), HP 0; Mark's too.\n\nSave data: No.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_alt_costume"
+name = "Other Codes: Player 1 Alternative Costume Modifier"
+description = "Player 1's alternative-costume byte (0x004A67EC). Author: \"There's probably a few more higher values, but I doubt it goes above 5.\"\n\nYour code:\nPlayer 1 Alternative Costume Modifier by bungholio\nGameShark v3-4 / Xploder v4\n004A67EC 000000??\n\nPlain code (your pnach):\n[Player 1 Alternative Costume Modifier] 004A67EC 00000000\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xBBC (game.bin: lbu/sb 0xbbc). 0 in J's Bar (probe base_a). Not observed in a probe.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "00 = Didn't notice anything", "01 = alternative clothes (Kevin: white t-shirt and blue jeans)", "02 (not described by the author)", "03 (not described by the author)", "04 (not described by the author)", "05 (not described by the author)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_model"
+name = "Other Codes: Player 1 Character Model Modifier"
+description = "Player 1's model (16-bit 0x004A67E4). Author: \"this only modifies your character's appearance, you'll still sound like and have the same animations of the player you pick.\" The entries he marks \"CANNOT LOAD\" (0009, 000f, 0010, 0015, 0022, 0026, 002e, 003a, 003d, 003e, 0043-0045, 0047, 0048, 004b-004f) and the empty 0050 are left out.\n\nYour code:\nPlayer 1 Character Model Modifier by bungholio\nGameShark v3-4 / Xploder v4\n104A67E4 0000????\n\nPlain code (your pnach):\n[Player 1 Character Model Modifier] 104A67E4 00000000\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xBB4 (game.bin: lhu 0xbb4, 75 reads). 0 in J's Bar (probe base_a). Not observed in a probe.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "0000 - Normal", "0001 - Mac", "0002 - Rodrigez", "0003 - Conrad", "0004 - Hunk:B", "0005 - Hunk", "0006 - Miguel", "0007 - \"UNFINISHED CHARACTER\"", "0008 - U.S.S.1", "000a - Arnold", "000b - Matt", "000c - Billy", "000d - Hursh", "000e - \"DOCTOR\"", "0011 - Peter", "0012 - Marvin", "0013 - Fred", "0014 - Andy", "0016 - Jean", "0017 - Tonny", "0018 - \"INJURED COP\"", "0019 - Keeper1", "001a - Keeper2", "001b - Austin", "001c - Clint", "001d - Bone", "001e - Bob", "001f - \"BLOODY GUY\"", "0020 - Nathan", "0021 - Samuel", "0023 - Will", "0024 - \"ZOMBIE WILL?\"", "0025 - Roger", "0027 - Carter", "0028 - Greg", "0029 - Scholar1", "002a - Scholar2", "002b - Jake", "002c - Gary", "002d - Man9", "002f - Micky", "0030 - Al", "0031 - Maskman", "0032 - Al:B", "0033 - Ben", "0034 - \"LITTLE GIRL\"", "0035 - Regan", "0036 - Regan:B", "0037 - Monica", "0038 - Rinda", "0039 - Rita", "003b - Mary", "003c - Kate", "003f - Danny", "0040 - Danny:B", "0041 - Gill", "0042 - Gill:B", "0046 - \"BALD DOCTOR\"", "0049 - \"CINDY\"", "004a - Doctor4", "0051 - Kurt", "0052 - Kurt:B" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_char_type"
+name = "Other Codes: Player 1 Character Type Modifier"
+description = "Player 1's character (byte 0x004A67C8). Author: \"08 or higher = don't try it, they don't exist so the game won't start\": only 00-07 are offered.\n\nYour code:\nPlayer 1 Character Type Modifier by bungholio\nGameShark v3-4 / Xploder v4\n004A67C8 000000??\n\nPlain code (your pnach):\n[Player 1 Character Type Modifier] 004A67C8 00000000\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xB98 (game.bin: lbu 0xb98, 707 reads; it indexes the gauge maximum table 0x0071ADB0, Kevin = 0). 0 with Kevin in probe base_a. Not observed in a probe.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "00 = Kevin", "01 = Mark", "02 = Jim", "03 = George", "04 = David", "05 = Alyssa", "06 = Yoko", "07 = Cindy" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_damage"
+name = "Other Codes: Player 1 Damage Modifier [Or is It Multiplier?]"
+description = "Player 1's damage multiplier (float 0x004A67F4, normally 1.0). Author: \"I set it to 4FFFFFFF and every enemy died no matter how I hit them ... You can't use this to open doors in 1 hit though\".\n\nYour code:\nPlayer 1 Damage Modifier [Or is It Multiplier?] by bungholio\nGameShark v3-4 / Xploder v4\n204A67F4 ????????\n\nPlain code (your pnach):\n[Player 1 Damage Modifier [Or is It Multiplier?]] 204A67F4 4FFFFFFF\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xBC4 (game.bin: lwc1 0xbc4): 1.0 in probe base_a, so it is a multiplier. Probe g_combo: with 2.0 Kevin's hits took 20 HP instead of 10. Probe damage_mod (cheat analysis): 4FFFFFFF kills.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "x0.5 (3F000000)", "x2 (40000000)", "x3 (40400000)", "x5 (40A00000)", "x10 (41200000)", "x100 (42C80000)", "4FFFFFFF - the author's value: every enemy dies" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_speed_1"
+name = "Other Codes: Player 1 Speed Modifier #1"
+description = "Player 1's speed value #1 (float 0x004A67D8, normally 1.0). Author: \"If you turn while moving you will move at normal speed.\"\n\nYour code:\nPlayer 1 Speed Modifier #1 by bungholio\nGameShark v3-4 / Xploder v4\n204A67D8 ????????\n\nPlain code (your pnach):\n[Player 1 Speed Modifier #1] 204A67D8 3FF00000\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xBA8 (game.bin: lwc1 0xba8, 186 reads). 1.0 in probe base_a. The values are the author's. Not observed in a probe.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "3FF00000 - Super Slow", "40000000 - Slow", "40400000 - Medium", "40800000 - Fast", "4FFFFFFF - Super Fast, you can go through walls even" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_speed_2"
+name = "Other Codes: Player 1 Speed Modifier #2"
+description = "Player 1's speed factor #2 (float 0x004A67F0, normally 1.0). Author: \"Also a speed code, but you don't move at normal speed while turning.\"\n\nYour code:\nPlayer 1 Speed Modifier #2 by bungholio\nGameShark v3-4 / Xploder v4\n204A67F0 ????????\n\nPlain code (your pnach):\n[Player 1 Speed Modifier #2] 204A67F0 00000000\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xBC0: 1.0 in probe base_a; it is the second word Codejunkies' Fast Hero sets to 1.5 (probe g_speed: faster), so it is a speed multiplier and the values are multipliers.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "0.5 (3F000000)", "1.5 (3FC00000, as Fast Hero)", "2.0 (40000000, as Super Fast Hero)", "3.0 (40400000)", "4.0 (40800000)" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_status"
+name = "Other Codes: Player 1 Status Modifier"
+description = "Player 1's status byte (0x004A67D0). Author: \"Some of them even killed me instantly, but I don't remember which ones. It's useless.\"\n\nYour code:\nPlayer 1 Status Modifier by bungholio\nGameShark v3-4 / Xploder v4\n004A67D0 000000??\n\nPlain code (your pnach):\n[Player 1 Status Modifier] 004A67D0 00000000\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xBA0 (game.bin: 614 lw / 287 sw of the word). 0 in J's Bar (probe base_a). Not observed in a probe.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "00 - Fine, when knocked down you keep looping the falling down animation forever", "01 - Poison, same looping", "02 - Bleeding, same looping", "03 - Bleeding again?, same looping", "04 - Fine, same looping", "05 - poison, the game skipped the picking me up animation", "06 - bleed, same", "07 - bleed, same", "08 - fine, dying animation keeps repeating when you're crawling", "09 - poison, same", "0C - fine, same dying animation loop", "10 - Fine, knocked down skips to crawling, the AI ignores you, dying loops forever", "14 - fine", "18 - fine", "1c - fine", "20 - fine, couldn't access start menu", "24 - fine, couldn't access start menu", "28 - (no description)", "ff - instantly fell to the floor and couldn't move" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_virus_gauge_1"
+name = "Other Codes: Player 1 Virus Gauge Modifier #1"
+description = "Player 1's virus gauge (0x004A67DC) is held at the percentage below, computed from the game's own maximum for the character. Author: \"this forces your virus gauge to 0 always\" (with 0).\n\nYour code:\nPlayer 1 Virus Gauge Modifier #1 by bungholio\nGameShark v3-4 / Xploder v4\n204A67DC ????????\n\nPlain code (your pnach):\n[Player 1 Virus Gauge Modifier #1] 204A67DC 00000000\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xBAC, where game.bin stores the gauge (sw s0,0xbac(s1) at 0x00667E5C). The maximum per character is the game's table at 0x0071ADB0 (Kevin 151200); 100 % is the death threshold (probe virus_death_base of the cheat analysis: \"YOU DIED\"), so at most 99 % is offered. Probes gauge_zero / gauge_99: 0.00 % and 99.00 % held.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_p1_virus_gauge_1_value"
+name = "Player 1 Virus Gauge Modifier #1: value (%)"
+description = "The gauge value for Player 1 Virus Gauge Modifier #1, in percent of the character's maximum (0-99; 100 % kills the character, so it is not offered)."
+type = "Number"
+min = 0
+max = 99
+step = 1
+precision = 0
+percent = false
+default = 0
+
+[[manifest.config_options]]
+id = "bh_p1_virus_gauge_2"
+name = "Other Codes: Player 1 Virus Gauge Modifier #2"
+description = "Player 1's virus word #2 (0x004A67E8) is held at the value you pick. Author: \"I think it stops the virus gauge from increasing ... but it's still useless.\"\n\nYour code:\nPlayer 1 Virus Gauge Modifier #2 by bungholio\nGameShark v3-4 / Xploder v4\n204A67E8 ????????\n\nPlain code (your pnach):\n[Player 1 Virus Gauge Modifier #2] 204A67E8 4FFFFFFF\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xBB8 (game.bin: lhu/sh 0xbb8). 0 in J's Bar (probe base_a). The values are the author's. Not observed in a probe.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "4FFFFFFF = Virus Gauge at 0% and the cells didn't move", "00000001 = About the same, but after a movie it went to .02% and stayed there" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_walk_through_walls"
+name = "Other Codes: Player 1 Walk Through Walls"
+description = "Player 1 walks through walls (0x004A68E0 and 0x004A68FC = FFFFFFFF). Author: if a room keeps pushing you back out of the door you came in, run the other way when you enter.\n\nYour code:\nPlayer 1 Walk Through Walls by bungholio\nGameShark v3-4 / Xploder v4\n204A68E0 FFFFFFFF\n204A68FC FFFFFFFF\n\nPlain code (your pnach):\n[Player 1 Walk Through Walls] 204A68E0 FFFFFFFF / 204A68FC FFFFFFFF\n\nWORKS AS WRITTEN on your disc. Player 1 block + 0xCB0 / 0xCCC. Probe walls_data (cheat analysis): Kevin passes the wall that stops him at x = 7947.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "bh_rapid_fire"
+name = "Other Codes: Rapid Fire Player 1"
+description = "While you hold R1+Cross (exactly), Player 1 fires continuously (byte 0x004A67D3 = FF).\n\nYour code:\nRapid Fire Player 1 by bungholio\nGameShark v3-4 / Xploder v4\nD02B081C 0000B7FF\n004A67D3 000000FF\n\nPlain code (your pnach):\n[Rapid Fire Player 1] D02B081C 0000B7FF / 004A67D3 000000FF\n\nWORKS AS WRITTEN on your disc. The joker 0x002B081C == B7FF is your disc's pad (probe base_a: B7FF with R1+Cross). 0x004A67D3 is Player 1 block + 0xBA3 (game.bin: 154 sb / 173 lbu). Probe g_rapid: with FF there the whole magazine (7 rounds) went within 20 vblanks of aiming; without it one round per press.\n\nSave data: No.\n\nNeeds the GameShark master code ([M] Must Be On, Alternate [M] Must Be On or Must Be On by MadCatz)."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_unlock_all_npcs"
+name = "Other Codes: Unlock All NPC's"
+description = "The extra (NPC) characters can be chosen at the character select.\n\nYour code:\nUnlock All NPC's by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nBC2254D3 547C4D38\n0CF49BDF A4E29C32\n\nPlain code (your pnach):\n[Unlock All NPC's] 4031F1EC 00030001 / FFFFFFFF 00000000\n\nADAPTED TO YOUR DISC. Regular 0x0031F1EC (three words) + 0x980 = 0x0031FB6C, the NPC bits the character select reads (demo.bin 0x00584ED0, 128 bits). The code writes FFFFFFFF; only the 40 bits the game itself sets (its collection table) are set. Probe m_char_masks: an extra character in the select (sheet_char.png).\n\nSave data: Yes: kept when the game saves; valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_unlock_all_scenarios"
+name = "Other Codes: Unlock All Scenarios (does nothing on your disc)"
+description = "Nothing. (MadCatz' Unlock All Levels above does unlock all scenarios.)\n\nYour code:\nUnlock All Scenarios by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\nEED42CF8 03E6EF03\n\nPlain code (your pnach):\n[Unlock All Scenarios] 20323260 FFFFFFFF\n\nNOT WORKING ON YOUR DISC. It writes 0x00323260 on the original release; +0x980 (the shift of every save code) that is 0x00323BE0 on your disc, 8 bytes past the scenario word 0x00323BD8 (MadCatz' code for the same thing writes 0x00323258 = 0x00323BD8 - 0x980). The scenario select reads 0x00323BD8 only (bits 0-4), so this word does nothing, and writing FFFFFFFF into an unused save word is not safe. Not applied.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "cb_unlock_infinity_mode"
+name = "Other Codes: Unlock Infinity Mode"
+description = "Unlocks the Infinity mode (0x0031FB7F bits 0x01 and 0x04, see MadCatz' Unlock Infinity Mode).\n\nYour code:\nUnlock Infinity Mode by Code Master, Lajos Szalay, Jay007, VirusPunk, Jarnold83\nCodebreaker v7+\n6EF97CA1 AE8365F1\n\nPlain code (your pnach):\n[Unlock Infinity Mode] 2031F1FC FFFFFFFF\n\nADAPTED TO YOUR DISC. Regular 0x0031F1FC + 0x980 = 0x0031FB7C. Valid bits only, as MadCatz' code. Probe m_char_masks.\n\nSave data: Yes: kept when the game saves; two valid bits only.\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "no_infection"
+name = "Kept from older versions: No Infection / Freeze Infection"
+description = "Your saved switch from 1.0/1.1, with the meaning it had in 1.1.0: turns on Don't Become A Zombie Over Time and When Bitten together (the virus gauge can no longer rise), and with Infection Freeze Value 0 (below, the default) and the Action Replay MAX master code On it also holds Player 1's virus gauge at 0 (Codejunkies' Zero Virus Gauge). With another freeze value the gauge stays where it is.\n\nThe two Code Master codes and the Codejunkies code above, each of which also has its own option; the same sites and word (0x00667E5C, 0x00660160, 0x004A67DC = 0) as 1.1.0 (simulator: the owner's saved settings change the same words in 1.1.0 and this version). The gauge is written only while Player 1 is set up in a scenario, like every Player 1 cheat of this version (1.1.0 wrote it in every state, also where the Player 1 block is not set up).\n\nNeeds the CodeBreaker master code, Enable Code (Must Be On) by Code Master et al."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"
+
+[[manifest.config_options]]
+id = "infection_freeze_value"
+name = "Kept from older versions: Infection Freeze Value (%)"
+description = "Your saved value from 1.0/1.1, with the meaning it had in 1.1.0: with No Infection / Freeze Infection On, 0 also holds the virus gauge at 0 (Codejunkies' Zero Virus Gauge; needs the Action Replay MAX and the CodeBreaker master code). 1-100: the gauge stays where it is (the two Don't Become A Zombie codes stop it rising). To hold the gauge at a chosen value use Player 1 Virus Gauge Modifier #1 and its own value above."
+type = "Number"
+min = 0
+max = 100
+step = 1
+precision = 0
+percent = false
+default = 0
+
+[[manifest.config_options]]
+id = "max_inventory"
+name = "Kept from older versions: Max Inventory"
+description = "Does nothing: there is no such code in your list. Kept so your saved setting stays valid."
+type = "Enum"
+options = [ "Off", "On" ]
+default = "Off"

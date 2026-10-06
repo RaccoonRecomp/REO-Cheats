@@ -1,0 +1,747 @@
+{
+  "schemaVersion": 1,
+  "mod": "reo-cheats",
+  "version": "1.2.0",
+  "note": "PRIVATE: code-patch sites of the owner's disc (SLUS-20765 v2.00), made from the owner's cheat files. Keep outside any repository. Every word of game code REO_Cheats can write: the site (image, pc, original word), the guard words that must hold, and each replacement word with the option(s) and master code that switch it (the first replacement whose condition holds wins; none = original). The mod writes these as memory writes (guard + write + restore); the game build compiles them in as switchable sites so that the code stays native.",
+  "images": {
+    "exe": "sha256:06bd5fd7243144cd30cdd0c0023763a369738cb91b177b35e85f6a4782b4ca46",
+    "game.bin": {
+      "identity": "xxh64:1b4bcbcfd81bd910",
+      "overlay": "BIN\\2.DAT",
+      "codeStart": "0x00570040",
+      "codeEnd": "0x00708580"
+    },
+    "demo.bin": {
+      "overlay": "BIN\\1.DAT",
+      "codeStart": "0x00570040",
+      "codeEnd": "0x00588480",
+      "note": "identity not computed here (the build takes it from the disc)"
+    }
+  },
+  "sites": [
+    {
+      "id": "reo-cheats.005B200C",
+      "image": "game.bin",
+      "pc": "0x005B200C",
+      "kind": "subst",
+      "original": "0xA6020024",
+      "originalAsm": "sh v0,0x24(s0)",
+      "guard": [
+        {
+          "address": "0x005B1FF8",
+          "word": "0x00121E3C"
+        }
+      ],
+      "pnachGuard": "Infinite Ammo: D05B1FC8 00001E3C (+0x30: 0x005B1FF8 == 0x1E3C)",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "infinite_ammo",
+          "options": [
+            "infinite_ammo"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Infinite Ammo"
+          ]
+        },
+        {
+          "word": "0x00000000",
+          "condition": "cj_infinite_ammo",
+          "options": [
+            "cj_infinite_ammo"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_armax_codejunkies",
+          "cheats": [
+            "Infinite Ammo"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.005B2008",
+      "image": "game.bin",
+      "pc": "0x005B2008",
+      "kind": "subst",
+      "original": "0x2482FFFF",
+      "originalAsm": "addiu v0,a0,-1 (delay slot)",
+      "guard": [
+        {
+          "address": "0x005B1FF8",
+          "word": "0x00121E3C"
+        }
+      ],
+      "pnachGuard": "Extra Ammo / Max Infinite Ammo: D05B1FC8 00001E3C (+0x30: 0x005B1FF8 == 0x1E3C); Infinite Ammo (All Weapons): none",
+      "replacements": [
+        {
+          "word": "0x24820001",
+          "condition": "cb_extra_ammo",
+          "options": [
+            "cb_extra_ammo"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Extra Ammo"
+          ]
+        },
+        {
+          "word": "0x24030063",
+          "condition": "cb_max_infinite_ammo",
+          "options": [
+            "cb_max_infinite_ammo"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Max Infinite Ammo"
+          ]
+        },
+        {
+          "word": "0x24820000",
+          "condition": "mc_infinite_ammo_all_weapons",
+          "options": [
+            "mc_infinite_ammo_all_weapons"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": [
+            "master_gameshark_madcatz",
+            "master_gameshark_madcatz_alternate",
+            "master_gameshark_madcatz_must_be_on"
+          ],
+          "cheats": [
+            "Infinite Ammo (All Weapons)"
+          ]
+        }
+      ],
+      "note": "Three options write this one instruction with different words: the first one switched on wins, in this order (Extra Ammo, Max Infinite Ammo, Infinite Ammo (All Weapons)). A build with one site per instruction can only compile one of them as a plain subst; they are mutually exclusive."
+    },
+    {
+      "id": "reo-cheats.005B218C",
+      "image": "game.bin",
+      "pc": "0x005B218C",
+      "kind": "subst",
+      "original": "0xA6020024",
+      "originalAsm": "sh v0,0x24(s0)",
+      "guard": [
+        {
+          "address": "0x005B2178",
+          "word": "0x00121E3C"
+        }
+      ],
+      "pnachGuard": "Infinite Item Usage: E0031E3D 005B2148 (+0x30, value fixed: 0x005B2178 == 0x1E3C)",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "infinite_items",
+          "options": [
+            "infinite_items"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Infinite Item Usage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.005B21A0",
+      "image": "game.bin",
+      "pc": "0x005B21A0",
+      "kind": "branchNever",
+      "original": "0x14430003",
+      "originalAsm": "bne v0,v1,0x005B21B0",
+      "guard": [
+        {
+          "address": "0x005B2178",
+          "word": "0x00121E3C"
+        }
+      ],
+      "pnachGuard": "Infinite Item Usage (as above)",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "infinite_items",
+          "options": [
+            "infinite_items"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Infinite Item Usage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.005B51B4",
+      "image": "game.bin",
+      "pc": "0x005B51B4",
+      "kind": "subst",
+      "original": "0x0000102D",
+      "originalAsm": "move v0,zero",
+      "guard": [
+        {
+          "address": "0x005B2178",
+          "word": "0x00121E3C"
+        }
+      ],
+      "pnachGuard": "Infinite Item Usage (as above)",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "infinite_items",
+          "options": [
+            "infinite_items"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Infinite Item Usage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.00667E5C",
+      "image": "game.bin",
+      "pc": "0x00667E5C",
+      "kind": "subst",
+      "original": "0xAE300BAC",
+      "originalAsm": "sw s0,0xbac(s1)",
+      "guard": [
+        {
+          "address": "0x00667E54",
+          "word": "0x0C199FA4"
+        }
+      ],
+      "pnachGuard": "Don't Become A Zombie Over Time: D0667DF4 00009F8C (+0x60: 0x00667E54 == 0x9FA4)",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "cb_no_zombie_over_time",
+          "options": [
+            "cb_no_zombie_over_time",
+            "no_infection"
+          ],
+          "optionValue": [
+            null,
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Don't Become A Zombie Over Time",
+            "No Infection / Freeze Infection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.00660160",
+      "image": "game.bin",
+      "pc": "0x00660160",
+      "kind": "subst",
+      "original": "0xAE220BAC",
+      "originalAsm": "sw v0,0xbac(s1) (delay slot)",
+      "guard": [
+        {
+          "address": "0x0066015C",
+          "word": "0x0C199FE4"
+        }
+      ],
+      "pnachGuard": "Don't Become A Zombie When Bitten: D06600FC 00009FCC (+0x60: 0x0066015C == 0x9FE4)",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "cb_no_zombie_when_bitten",
+          "options": [
+            "cb_no_zombie_when_bitten",
+            "no_infection"
+          ],
+          "optionValue": [
+            null,
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Don't Become A Zombie When Bitten",
+            "No Infection / Freeze Infection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.00640800",
+      "image": "game.bin",
+      "pc": "0x00640800",
+      "kind": "branchNever",
+      "original": "0x1062000C",
+      "originalAsm": "beq v1,v0,0x00640834",
+      "guard": [
+        {
+          "address": "0x006407F4",
+          "word": "0x00C0882D"
+        }
+      ],
+      "pnachGuard": "1-Hit Deaths (Enemies): D0640794 0000882D (+0x60: 0x006407F4 == 0x882D)",
+      "replacements": [
+        {
+          "word": "0xA6620138",
+          "condition": "one_hit_kills",
+          "options": [
+            "one_hit_kills"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "1-Hit Deaths (Enemies)"
+          ]
+        }
+      ],
+      "note": "branchNever with the replacement sh v0,0x138(s3)."
+    },
+    {
+      "id": "reo-cheats.00660B18",
+      "image": "game.bin",
+      "pc": "0x00660B18",
+      "kind": "branchNever",
+      "original": "0x10600003",
+      "originalAsm": "beqz v1,0x00660B28",
+      "guard": [
+        {
+          "address": "0x00660B0C",
+          "word": "0x0080802D"
+        }
+      ],
+      "pnachGuard": "Enemies Don't Damage You With Attacks: D0660AAC 0000802D (+0x60: 0x00660B0C == 0x802D)",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "cb_enemies_dont_damage",
+          "options": [
+            "cb_enemies_dont_damage"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Enemies Don't Damage You With Attacks"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.0065FD38",
+      "image": "game.bin",
+      "pc": "0x0065FD38",
+      "kind": "branchAlways",
+      "original": "0x1443001D",
+      "originalAsm": "bne v0,v1,0x0065FDB0",
+      "guard": [
+        {
+          "address": "0x0065FD14",
+          "word": "0x0220202D"
+        }
+      ],
+      "pnachGuard": "Become A Zombie After Death: D065FCB5 0000202D (+0x60 and aligned: 0x0065FD14 == 0x202D); the code writes the halfword 0x1000 at 0x0065FD3A",
+      "replacements": [
+        {
+          "word": "0x1000001D",
+          "condition": "cb_zombie_after_death",
+          "options": [
+            "cb_zombie_after_death"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Become A Zombie After Death (Offline Mode)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.00660800",
+      "image": "game.bin",
+      "pc": "0x00660800",
+      "kind": "subst",
+      "original": "0x86030544",
+      "originalAsm": "lh v1,0x544(s0)",
+      "guard": [
+        {
+          "address": "0x006607F4",
+          "word": "0x84234200"
+        }
+      ],
+      "pnachGuard": "Infinite Health: E0023881 00660794 (+0x60, value fixed: 0x006607F4 == 0x4200)",
+      "replacements": [
+        {
+          "word": "0x2403270F",
+          "condition": "cb_infinite_health_on",
+          "options": [
+            "cb_infinite_health"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Infinite Health"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.00660808",
+      "image": "game.bin",
+      "pc": "0x00660808",
+      "kind": "substAccess",
+      "original": "0x00000000",
+      "originalAsm": "nop (delay slot)",
+      "guard": [
+        {
+          "address": "0x006607F4",
+          "word": "0x84234200"
+        }
+      ],
+      "pnachGuard": "Infinite Health (as above)",
+      "replacements": [
+        {
+          "word": "0xAE030544",
+          "condition": "cb_infinite_health_32",
+          "options": [
+            "cb_infinite_health"
+          ],
+          "optionValue": [
+            2
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Infinite Health"
+          ]
+        },
+        {
+          "word": "0xA6030544",
+          "condition": "cb_infinite_health_16",
+          "options": [
+            "cb_infinite_health"
+          ],
+          "optionValue": [
+            1
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "Infinite Health"
+          ]
+        }
+      ],
+      "note": "As written the store is sw (AE030544: HP 9999 and max HP 0); the option's 16-bit choice writes sh (A6030544: HP only)."
+    },
+    {
+      "id": "reo-cheats.0068C7DC",
+      "image": "game.bin",
+      "pc": "0x0068C7DC",
+      "kind": "subst",
+      "original": "0x2463FFFF",
+      "originalAsm": "addiu v1,v1,-1",
+      "guard": [
+        {
+          "address": "0x0068C7D0",
+          "word": "0x848300A8"
+        }
+      ],
+      "pnachGuard": "none (the jokers D02B081C 0000FEFF / D02AFE1C 0000FEFF gate two of them)",
+      "replacements": [
+        {
+          "word": "0x24630000",
+          "condition": "mc_freeze_escape_time_l2",
+          "options": [
+            "mc_freeze_escape_time_l2"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": [
+            "master_gameshark_madcatz",
+            "master_gameshark_madcatz_alternate",
+            "master_gameshark_madcatz_must_be_on"
+          ],
+          "cheats": [
+            "Press And Hold L2 To Freeze Escape Time"
+          ],
+          "joker": {
+            "padHalfword": "0x002B081C",
+            "equals": "0xFEFF"
+          }
+        },
+        {
+          "word": "0x24630000",
+          "condition": "mc_reset_escape_time_l2",
+          "options": [
+            "mc_reset_escape_time_l2"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": [
+            "master_gameshark_madcatz",
+            "master_gameshark_madcatz_alternate",
+            "master_gameshark_madcatz_must_be_on"
+          ],
+          "cheats": [
+            "Infinite: Press L2 To Reset Escape Time"
+          ],
+          "joker": {
+            "padHalfword": "0x002B081C",
+            "equals": "0xFEFF"
+          }
+        },
+        {
+          "word": "0x24630000",
+          "condition": "mc_infinite_escape_time",
+          "options": [
+            "mc_infinite_escape_time"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": [
+            "master_gameshark_madcatz",
+            "master_gameshark_madcatz_alternate",
+            "master_gameshark_madcatz_must_be_on"
+          ],
+          "cheats": [
+            "Single Play Codes: Infinite: Escape Time"
+          ]
+        }
+      ],
+      "note": "The rate profile (config/rate_profiles/outbreak_ntsc_u_v2.00.json, site R1 \"event-script timers\") patches this same instruction with the same word 0x24630000 under SubTick. A build with one site per instruction must merge them: the replacement applies when SubTick OR one of these options is on."
+    },
+    {
+      "id": "reo-cheats.0068C7E0",
+      "image": "game.bin",
+      "pc": "0x0068C7E0",
+      "kind": "subst",
+      "original": "0xA48300A8",
+      "originalAsm": "sh v1,0xa8(a0)",
+      "guard": [
+        {
+          "address": "0x0068C7D0",
+          "word": "0x848300A8"
+        }
+      ],
+      "pnachGuard": "none",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "cj_infinite_time",
+          "options": [
+            "cj_infinite_time"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_armax_codejunkies",
+          "cheats": [
+            "Infinite Time"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.00667E58",
+      "image": "game.bin",
+      "pc": "0x00667E58",
+      "kind": "subst",
+      "original": "0x0200302D",
+      "originalAsm": "move a2,s0 (delay slot)",
+      "guard": [
+        {
+          "address": "0x00667E54",
+          "word": "0x0C199FA4"
+        }
+      ],
+      "pnachGuard": "none",
+      "replacements": [
+        {
+          "word": "0x34100000",
+          "condition": "mc_virus_level_never_goes_up",
+          "options": [
+            "mc_virus_level_never_goes_up"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": [
+            "master_gameshark_madcatz",
+            "master_gameshark_madcatz_alternate",
+            "master_gameshark_madcatz_must_be_on"
+          ],
+          "cheats": [
+            "Virus Level Never Goes Up"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.00667E28",
+      "image": "game.bin",
+      "pc": "0x00667E28",
+      "kind": "subst",
+      "original": "0x4410B800",
+      "originalAsm": "mfc1 s0,$f23",
+      "guard": [
+        {
+          "address": "0x00667E24",
+          "word": "0x4600BDE4"
+        },
+        {
+          "address": "0x00667E54",
+          "word": "0x0C199FA4"
+        }
+      ],
+      "pnachGuard": "joker D02AFE9C 0000FBFE writes it, D02AFE9C 0000FFFF writes the original back (+0xA00: pad copy 0x002B089C)",
+      "replacements": [
+        {
+          "word": "0x24900000",
+          "condition": "cb_l1_select_infection",
+          "options": [
+            "cb_l1_select_infection"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_codebreaker_codemaster",
+          "cheats": [
+            "P1 Press L1+Select For Infection 100%"
+          ],
+          "latch": {
+            "padHalfword": "0x002B089C",
+            "setWhen": "0xFBFE",
+            "clearWhen": "0xFFFF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.00696514",
+      "image": "game.bin",
+      "pc": "0x00696514",
+      "kind": "subst",
+      "original": "0x92020C82",
+      "originalAsm": "lbu v0,0xc82(s0)",
+      "guard": [
+        {
+          "address": "0x0069650C",
+          "word": "0x0C16061C"
+        }
+      ],
+      "pnachGuard": "none",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "cj_zombies_dont_move",
+          "options": [
+            "cj_zombies_dont_move"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_armax_codejunkies",
+          "cheats": [
+            "Zombies Don't Move"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.0057C518",
+      "image": "demo.bin",
+      "pc": "0x0057C518",
+      "kind": "subst",
+      "original": "0x0003100A",
+      "originalAsm": "movz v0,zero,v1",
+      "guard": [
+        {
+          "address": "0x0057C4F0",
+          "word": "0x24423BF4"
+        },
+        {
+          "address": "0x0057C510",
+          "word": "0x8CA30000"
+        }
+      ],
+      "pnachGuard": "the installed code's own: lhu == 0x100A at the site",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "cj_collection_opened",
+          "options": [
+            "cj_collection_opened"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_armax_codejunkies",
+          "cheats": [
+            "Collection Opened"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reo-cheats.00581C14",
+      "image": "demo.bin",
+      "pc": "0x00581C14",
+      "kind": "branchNever",
+      "original": "0x10400072",
+      "originalAsm": "beqz v0,0x00581DE0",
+      "guard": [
+        {
+          "address": "0x00581C04",
+          "word": "0x8C424078"
+        }
+      ],
+      "pnachGuard": "none",
+      "replacements": [
+        {
+          "word": "0x00000000",
+          "condition": "cj_scenarii_opened",
+          "options": [
+            "cj_scenarii_opened"
+          ],
+          "optionValue": [
+            null
+          ],
+          "master": "master_armax_codejunkies",
+          "cheats": [
+            "Scenarii Opened"
+          ]
+        }
+      ]
+    }
+  ]
+}
