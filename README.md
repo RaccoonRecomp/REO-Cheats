@@ -39,9 +39,8 @@ active and says so.
 
 > **Status.** Resident Evil Outbreak Recompiled 1.5.0 prepares the game's code from your own disc on your PC. In the
 > prepared game the cheats marked **game data** or **save data** take effect. The cheats marked **game code** also need
-> their code sites compiled into the prepared game: this download carries them (`patches_sites.json`). After you
-> switch the mod on, **Start Game** offers to update the prepared game (**Update Now**): only what the mod changes is
-> compiled again, in about 30 to 60 seconds. Then the game-code cheats act in your game too.
+> their code sites compiled into the prepared game: the program compiles them in when it prepares the
+> game, so the game-code cheats act in your game as soon as you switch the mod on.
 
 The cheats marked **game code** in the table below never write the game's code directly: the program switches the
 matching code sites compiled into the prepared game code, so they act only in a game build that has this mod's sites.
